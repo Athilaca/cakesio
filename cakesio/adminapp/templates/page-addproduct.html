@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        {% if error_message %}
+                        <div class="alert alert-danger">
+                         {{ error_message }}
+                        </div>
+                        {% endif %}
+                        <h2 class="content-title text-center mx-auto">Add New Product</h2>
+                        <div>
+                           
+
+                            <form method="POST"enctype="multipart/form-data">
+                                {% csrf_token%}
+                              
+                          
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Basic</h4>
+                        </div>
+                        <div class="card-body">
+                           
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="product_name" value={{datas.product_name}}>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description">{{datas.description}}</textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="$" type="text" class="form-control" name="price" value={{datas.price}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">old price</label>
+                                            <input placeholder="$" type="text" name="oldprice" class="form-control" value={{datas.oldprice}}>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                 <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                   <select class="form-select" name="category">
+                                        {% for i in category %}
+                                        <option value="{{ i.id }}"> {{i.category_name}} </option>
+                                        {% endfor %}
+                                       
+                                    </select>
+                                </div>
+                               
+                        </div>
+                    </div> 
+                    
+                </div>
+               
+                <div class="col-lg-3">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Media</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <label>product-image</label>
+                                <img src="{{datas.images.url}}" alt="">
+                               
+                                <input class="form-control" type="file" name="images" value={{datas.images}} >
+                                <div class="input-upload">
+                                    <label>front-image</label>
+                                    <img src="{{datas.front_image.url}}" alt="">
+                                    <input class="form-control" type="file" name="front_image" value={{datas.front_image}} >
+                                </div>
+                                <div class="input-upload">
+                                    <label>top-image</label>
+                                    <img src="{{datas.top_image.url}}" alt="">
+                                    <input class="form-control" type="file" name="top_image"  value={{datas.top_image}}>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+               
+                 
+             
+                </div>
+            </div>
+        </form>
+        
+        </section> <!-- content-main end// -->
+        {% endblock %}

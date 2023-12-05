@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                               
+                                {% if error_message %}
+                                <div class="alert alert-danger">
+                                    {{ error_message }}
+                                </div>
+                                {% endif %}
+
+                             
+                            <form method='POST'>
+                                {% csrf_token%}
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name='name' />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_slug" class="form-label">Slug</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_slug" name='slug' />
+                                </div>
+                             
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control" name='description'></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button  type="submit" class="btn btn-primary">Create category</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                        
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Slug</th>
+                                            <th>Order</th>
+                                            <th >Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in datas %}
+                                        <tr>
+                                            
+                                              
+                                            </td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><b>{{user.category_name}}</b></td>
+                                            <td>{{user.description}}</td>
+                                            <td>{{user.slug}}</td>
+                                            <td>1</td>
+                                          
+                                               
+                                            <td>
+                                                <a href="{% url "admin_editcategory" user.id %}"><i class="fa-solid fa-pen-to-square text-warning"></i></a> 
+                                                <a class = 'ml-5'href="{% url "category_delete" user.id %}"><i class="fa-solid fa-trash text-danger"></i></a></td>
+                                         
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+        </section> <!-- content-main end// -->
+        {% endblock %}

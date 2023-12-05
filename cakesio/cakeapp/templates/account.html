@@ -1,0 +1,299 @@
+﻿{% extends "cakebase.html" %}
+{% load static%}
+{% block content %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <main class="main">
+         <div class=" breadcrumb-wrap">
+           <div class="container">
+                <div class="breadcrumb">
+    
+                    <div class="logo logo-width-1 mt-5">
+                        <a href="{% url 'account' %}"><img src="{{ request.user.profile_pic.url}}" class="img-xs rounded-circle" alt="profile photo"></a>
+                     
+                        <span class="edit-icon" onclick="openProfilePicEditor()">
+                     <i class="fas fa-pencil-alt">&nbsp;&nbsp;edit picture</i>
+                    </span>
+                    
+                    
+                    </div>
+                   
+                    
+                     <div class="card-body ">
+                        <h5 class="mb-0">hey {{request.user.first_name}} ! </h5><br>
+                        <p> Your email : {{request.user.email}}<br>You can view your <a href="#"> recent orders</a>, manage your <a href="#"> addresses</a> and <a href="#">edit your profile.</a></p>
+                    </div>
+                    <div class="card-body">
+                       
+                        <h5>Your Referral Link</h5>
+
+                        <p>Share this link with your friends to earn rewards:</p>
+                        <a href="{{referral_link}}">{{referral_link}}</a>
+                        <p>or use the referral code: {{referral_code}}</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+       <section class="pt-150 pb-150">
+        
+            <div class="container">
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show"role="alert">
+                  <h6>{{message}}</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close">
+                </div>
+                {% endfor %}
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                       
+                                        
+                                        <li class="nav-item">
+                                            <a class="nav-link  active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Add Address</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Wallet</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                        </li>
+                                     
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Edit profile</a>
+                                        </li>
+                                     
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                            
+        
+                            <div class="col-md-8">
+                                 <div class="tab-content dashboard-content">
+                                    <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">new </h5>
+                                            </div>
+                                        
+                                           
+                                            <div >
+                                             
+                                                <div class="card-body">
+                                                    <form method="POST" name="enq">
+                                                        {% csrf_token %}
+                                                    
+                                                        <div class="row">
+                                                           
+                                                           
+                                                            <div class="form-group col-md-6">
+                                                                <label>Full Name <span class="required">*</span></label>
+                                                                <input required="" class="form-control square" name="full_name" type="text">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>phone number <span class="required">*</span></label>
+                                                                <input required="" class="form-control square" name="phone_number"type="text">
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>Address <span class="required">*</span></label>
+                                                                <input required="" class="form-control square" name="address" type="text">
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>City <span class="required">*</span></label>
+                                                                <input required="" class="form-control square" name="city" type="text">
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>District <span class="required">*</span></label>
+                                                           
+                                                                <div class="form-group">
+                                                                    <div class="custom_select">
+                                                                        <select class="form-control select-active" name="district">
+                                                                            <option value="">Select an option...</option>
+                                                                           
+                                                                            <option name="district">kasargod</option>
+                                                                            <option name="district">kannur</option>
+                                                                            <option name="district">kozhikode</option>
+                                                                            <option name="district">malappuram</option>
+                                                                            <option name="district">palakkad</option>
+                                                                            <option name="district">thrissur</option>
+                                                                            <option name="district">ernakulam</option>
+                                                                            <option name="district">wayanad</option>
+                                                                            <option name="district">alappuzha</option>
+                                                                            <option name="district">kottayam</option>
+                                                                            <option name="district">kollam</option>
+                                                                            <option name="district">pathanamthitta</option>
+                                                                            <option name="district">thiruvanandhapuram</option>
+                                                                            <option name="district">idukki</option>
+                                                                           
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>Pincode <span class="required">*</span></label>
+                                                                <input required="" class="form-control square" name="pincode" type="text">
+                                                            </div>
+                                                            
+                                                            <div class="col-md-12">
+                                                                <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save Address</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Orders</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th colspan="2">Actions</th>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for order in orders %}
+                                                            <tr>
+                                                                <td>{{order.id}}</td>
+                                                                <td>{{order.created_date}}</td>
+                                                                <td>{{order.status}}</td>
+                                                                <td>${{order.bill_amount}}</td>
+                                                                <td><a href="{% url 'order_view' order.id %}" class="btn-small d-block">View </a>
+                                                                </td>
+                                                              
+                                                                <td>
+                                                                {% if order.status == "Pending" or order.status == "confirmed" %}
+                                                                <a href="{% url 'order_cancel' order.id %}"  type="button" class="btn-small d-block btn-danger text-center">Cancel </a>
+                                                                {% endif %}
+                                                                </td>
+                                                               
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Wallet</h5>
+                                            </div>
+                                            <div class="card-body contact-from-area">
+                                                <p>For order cancellations before shipping,it promptly refunds the amount to the user's wallet when payment using UPI.
+
+"Additionally, successful referrals are rewarded".</p>
+                                                <div class="row">
+                                                    <div class="col-lg-8 m-5">
+                                                       
+                                                         <h3>Wallet Amount</h3>
+                                                            <h4 class="mt-4">Balance: ${{ wallet.balance }}</h4>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                        <div class="row">
+                                    {% for i in address %}
+                                            <div class="col-lg-6">
+                                                <div class="card mb-3 mb-lg-0">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0">Billing Address  <a class="action" data-title="Remove"><a href="{% url 'delete_address' i.id %}" class="text-muted"><i class="fi-rs-trash"></i></a></a> </h5>
+                                                            
+                                                        
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address>{{i.full_name}}<br>{{i.address}},<br> {{i.city}} <p>{{i.district}}</p> <br>phone:{{i.phone_number}}<br>pincode:{{i.pincode}}
+                                                        </address>
+                                                        
+                                                        <a href="#" class="btn-small">Edit</a>
+                                                    
+                               
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             {% endfor %}      
+                                  <div class="col-lg-6">
+                                                <div class="card">
+                                                     
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Account Details</h5>
+                                            </div>
+                                            <div class="card-body">
+                                               
+                                              
+                                                <form method="POST" name="enq" action="{% url 'change_password' %}">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+
+                                                        <div class="form-group col-md-12">
+                                                            <label>First name <span class="required">*</span></label>
+                                                            <input  class="form-control square" name="fname" type="text" value={{request.user.first_name}}>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Email Address <span class="required">*</span></label>
+                                                            <input  class="form-control square" name="email" type="email" value={{request.user.email}}>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Current Password <span class="required">*</span></label>
+                                                            <input class="form-control square" name="password" type="password" >
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>New Password <span class="required">*</span></label>
+                                                            <input  class="form-control square" name="npassword" type="password">
+                                                        </div>
+                                                        
+                                                        <div class="col-md-12">
+                                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+    function openProfilePicEditor() {
+        
+        window.location.href = "{% url 'update_profile_pic' %}";
+    }
+</script>
+{% endblock %}
+   

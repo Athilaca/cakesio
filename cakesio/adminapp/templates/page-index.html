@@ -1,0 +1,203 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block content %}
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Dashboard </h2>
+                   
+                </div>
+                <div>
+                    <a href="{% url 'sales_report' %}" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Revenue</h6>
+                                <span>${{total_amount}}</span>
+                                <span class="text-sm">
+                                    Shipping fees are not included
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Orders</h6> <span>{{total_orders}}</span>
+                                <span class="text-sm">
+                                    Excluding orders in transit
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Products</h6> <span>{{total_products}}</span>
+                                <span class="text-sm">
+                                    In {{ total_categories}} Categories
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Customers</h6> <span>{{total_users}}</span>
+                                <span class="text-sm">
+                                    Based in your local time.
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+           <div class="row">
+                <div class="col-xl-8 col-lg-12">
+                    <div class="card mb-4 ">
+                        <form method='GET'>
+                        <article class="card-body ">
+                             <h5 class="card-title">Sale statistics</h5>
+                             <label>select date :</label>
+                            <input
+                            type="date"
+                            value=""
+                            class=" form-control mb-3"
+                            name="selected_date"/>
+                            <button class="btn btn-primary mb-3" type="submit" >create graph </button> 
+                            <canvas id="salesChart" height="150px"></canvas>
+                         
+                        </article>
+                    </form>
+                    </div>
+                    
+                </div>
+                <div class="col-xl-4 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Revenue Base on Area</h5>
+                            <canvas id="myChart2" height="217"></canvas>
+                        </article>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="pagination-area mt-30 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section> <!-- content-main end// -->
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+        // Initialize the chart with default data
+        updateChart();
+
+        // Listen for changes in the date input
+        $('input[name="selected_date"]').on('change', function () {
+            updateChart();
+        });
+
+        function updateChart() {
+            // Get the selected date
+            var selectedDate = $('input[name="selected_date"]').val();
+
+            // Fetch data for the selected date
+            fetch('/sales-chart-data/?selected_date=' + selectedDate)
+                .then(response => response.json())
+                .then(data => {
+                    // Update the chart data
+                    salesChart.data.labels = data.labels;
+                    salesChart.data.datasets[0].data = data.data;
+                    salesChart.update();
+                });
+        }
+
+       
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'bar', // Use 'bar' for a bar chart or 'line' for a line chart, adjust as needed
+            data: {
+                labels: ['Daily', 'Weekly', 'Monthly', 'Yearly'],
+                datasets: [{
+                    label: 'Total Sales',
+                    data: [
+                        {{ daily_total_sales|default:0 }},
+                        {{ weekly_total_sales|default:0 }},
+                        {{ monthly_total_sales|default:0 }},
+                        {{ yearly_total_sales|default:0 }}
+                    ],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+    
+        {% endblock %}
+
+        {% comment %} <script>
+    // Get the data from the Django context
+    var dailySalesData = {{ daily_sales.values_list('created_date', 'bill_amount')|safe }};
+
+    // Extract labels and data from the queryset
+    var labels = dailySalesData.map(item => item[0]);
+    var data = dailySalesData.map(item => item[1]);
+
+    // Configure the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',  // You can change the type (line, bar, etc.) based on your needs
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Daily Sales',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',  // Set the color
+                borderWidth: 2,
+                fill: false,
+            }]
+        },
+        options: {
+            // Customize options as needed
+        }
+    });
+    </script>
+
+         {% endcomment %}

@@ -1,0 +1,176 @@
+{% load static%}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara - eCommerce HTML Template</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'cakeapp/imgs/theme/favicon.svg' %}">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'cakeapp/css/main.css' %}">
+</head>
+
+<body>
+    <header class="header-area header-style-5">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                            <ul>
+                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
+                                <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                            <div id="news-flash" class="d-inline-block">
+                                <ul>
+                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
+                                    <li>Supper Value Deals - Save more with coupons</li>
+                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <ul>
+                                <li>
+                                    <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
+                                    <ul class="language-dropdown">
+                                        <li><a href="#"><img src="assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
+                                        <li><a href="#"><img src="assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
+                                        <li><a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
+                                    </ul>
+                                </li>
+                                <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card m-5">
+            <div class="card-body">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="40%">Image</th>
+                                <th width="40%">Product</th>
+                                <th width="20%">Unit Price</th>
+                                <th width="20%">Quantity</th>
+                                <th width="20%" class="text-end">Total</th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in order_items %}
+                            <tr>
+                                <td>
+                                    <div class="left">
+                                        <img src="{{order.variant.product.images.url}}" width="40" height="40" class="img-xs" alt="Item">
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="itemside" href="#">
+                                       
+                                        <div class="info">{{order.variant.product.product_name}} </div>
+                                    </a>
+                                </td>
+                                
+                                <td> {{order.variant.price}} </td>
+                                
+                                <td>{{order.quantity}} </td>
+                                <td class="text-end"> ${{order.sub_total}} </td>
+                                {% endfor %} 
+                               
+                                
+                            </tr>
+                             <tr>
+                               
+                                <td class="text-end"><h4>Bill Amount:&nbsp;&nbsp;&nbsp;&nbsp;${{order_details.bill_amount}} </h4></td>
+                               
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                    <div class="card-body">
+                        <div class="row mb-50 mt-20 order-info-wrap">
+                            <div class="col-md-4">
+                               
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-person"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Customer</h6>
+                                        <p class="mb-1">
+                                            {{order_details.full_name}} <br>{{order_details.user.email}} <br> {{order_details.phone_number}}
+                                        </p>
+                                        <a href="#">View profile</a>
+                                    </div>
+                                </article>
+                            </div> <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-local_shipping"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Order info</h6>
+                                        <p class="mb-1">
+                                            Shipping: Fargo express <br> Pay method: {{order_details.payment_method}} <br> Status: {{order_details.status}}
+                                        </p>
+                                        <a href="#">Download info</a>
+                                    </div>
+                                </article>
+                            </div> <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-place"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Deliver to</h6>
+                                        <p class="mb-1">
+                                            City: {{order_details.address}} <br>{{order_details.city}},{{order_details.district}} <br> {{order_details.pincode}}
+                                        </p>
+                                        <a href="#">View profile</a>
+                                    </div>
+                                </article>
+                            </div> <!-- col// -->
+                        </div> <!-- row // -->
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-4">
+                            <div class="box shadow-sm bg-light">
+                                <h6 class="mb-15">Payment info</h6>
+                                <p>
+                                    <img src="assets/imgs/card-brands/2.png" class="border" height="20"> Master Card **** **** 4768 <br>
+                                    Business name: Grand Market LLC <br>
+                                    Phone: +1 (800) 555-154-52
+                                </p>
+                                <dl class="dlist">
+                               
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+                                   
+            </head>
+         </html>

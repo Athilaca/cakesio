@@ -1,0 +1,64 @@
+{% extends "base.html"%}
+{% load static%}
+
+{% block content %}
+        <section class="content-main">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'banners' %}">
+                {% csrf_token %}
+            <div class="content-header">
+                <div>
+                   
+                </div>
+            </div>
+            <div class="card mb-4">
+               
+                <div class="card-body">
+                    <h5 class="card-title">Banner</h5>
+                    <div class="mt-4">
+                        <div class="text-muted font-size-14">
+                            <div class="input-upload">
+                                <label>SELECT BANNER</label>
+                                <img src="" alt="">
+                               
+                                <input class="form-control" type="file" name="banner" >
+                            </div>
+                        </div>
+                      <button type="submit" class="btn btn-primary m-3">create banner</button>
+                    </div>
+                </div>
+            </div> <!-- card end// -->
+        </form>
+
+        <form method="POST" action="{% url 'coupon' %}">
+            {% csrf_token%}
+        <div class="card mb-4">
+           
+            <div class="card-body">
+                <h5 class="card-title">Coupon</h5>
+                <div class="mt-4">
+                    <div class="text-muted font-size-14">
+                        <label>CREATE COUPON</label>
+
+                        <div >
+                            <input class="form-control" type="text" placeholder="enter the code" name="coupon_code" >
+                        </div>
+                        <div>
+                           <input class="form-control mt-3" type="text" placeholder="enter discount"  name="discount_percentage">
+                           </div>
+                            <div>
+                           <input class="form-control mt-3" type="date" placeholder="enter expiry date"  name="expiry_date">
+                           </div>
+                           
+                       
+                    </div>
+                      <button type="submit" class="btn btn-primary m-3">create coupon</button>
+                </div>
+            </div>
+         
+        </div> 
+        
+    </form>
+        </section>
+         
+        {% endblock %}
+        

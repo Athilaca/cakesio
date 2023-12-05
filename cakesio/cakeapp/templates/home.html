@@ -1,0 +1,216 @@
+﻿{% extends "cakebase.html" %}
+{% load static%}
+{% block content %}
+
+
+    <div class="container p-5 ">
+    <div class="search-style-2">
+                            <form action="{% url 'home' %}" method="GET">
+                                 
+                            <input type="text" placeholder="Search for items..."  name="search" value="{{ request.GET.search }}">
+                             {% comment %} <button type="submit" class="btn btn-primary"><h6>Search</h6></button> {% endcomment %}
+                             
+                            </form>
+                        </div>
+                    </div>
+                       
+    <main class="main">
+        {% for banner in banners %}
+        <section class="main-banner banner mb-20 container" style="background: url({{banner.banner.url}});
+        background-repeat: no-repeat;
+        background-size: 100% 100%; height:500px; padding:50px;">
+       
+                                    <div class="col-lg-5 col-md-6 ">
+                                        <div class="hero-slider-content-2" >
+                                            <h4 class="animated">Welcome</h4>
+                                            <h3 class="animated fw-900">Trending Desserts</h3>
+                                            <h2 class="animated fw-900 text-brand">More demanded Cakes</h2>
+                                            <p class="animated">Save more with coupons & up to 25% off</p>
+                                            <a class="animated btn btn-brush btn-brush-1" href="shop-product-right.html" tabindex="0"> Get It Now </a>
+                                        </div>                            
+        </section>
+        
+        <section class="banners mb-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="banner-img wow fadeIn animated">
+                            <img src="{% static 'cakeapp/imgs/banner/banner-1.png'%}" alt="">
+                            <div class="banner-text">
+                                <span>Smart Offer</span>
+                                <h4>Save 20% on <br>your birthdays</h4>
+                                <a href="shop-grid-right.html">Shop Now <i class="fi-rs-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="banner-img wow fadeIn animated">
+                            <img src="{{banner.offer_banner2.url}}" alt="">
+                            <div class="banner-text">
+                               <h4>Great Seasonal<br>Cakes</h4>
+                               <h5> At 30% <br>Offer</h5>
+                            </div>
+                            <a href="{% url 'offer' %}">Click here to Shop Now <i class="fi-rs-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-md-none d-lg-flex">
+                        <div class="banner-img wow fadeIn animated  mb-sm-0">
+                            <img src="{% static 'cakeapp/imgs/banner/banner-3.png'%}" alt="">
+                            <div class="banner-text">
+                                <span>Newly added</span>
+                                <h4>Shop Today’s <br>Deals & Offers</h4>
+                                <a href="shop-grid-right.html">Shop Now <i class="fi-rs-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        
+        <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
+            <div class="container">
+                <div class="row">
+                   
+                    <div class="col-lg-3">
+                        <div class="widget-category mb-30">
+                           
+                            <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
+                            <ul class="categories">
+                            <li><a href="{% url 'home' %}">All Products</a></li>
+                            </ul>
+
+                            {% for category in categories %}
+                            <ul class="categories">
+                                
+                                <li><a href="{% url 'home' category_slug=category.slug %}">{{category.category_name}}</a></li>
+                              
+                            </ul>
+                            {% endfor %}
+                        </div>
+                       
+                        <div class="widget-category mb-30">
+                            <h5 class="section-title style-1 mb-30 wow fadeIn animated">Price Range</h5>
+                            <ul class="categories">
+                                <li><a href="{% url 'home_price_range'  price_range='0-300' %}">$0-$300</a></li>
+                                <li><a href="{% url 'home_price_range'  price_range='400-600' %}">$400-$600</a></li>
+                                <li><a href="{% url 'home_price_range'  price_range='600-800' %}">$600-$800</a></li>
+                                <li><a href="{% url 'home_price_range'  price_range='800-1000' %}">$800-$1000</a></li>
+                                <li><a href="{% url 'home_price_range'  price_range='1000+' %}">1000$+</a></li>
+                                
+                            </ul>
+                        </div>
+                       
+                    
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="tab-header">
+                            <div class="tab-content wow fadeIn animated" id="myTabContent">
+                                <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                                    <div class="row product-grid-4">
+                                    {% if datas %}
+                                    {% for data in datas%}
+
+                                        <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                                            <div class="product-cart-wrap mb-30">
+                                                <div class="product-img-action-wrap">
+                                                    <div class="product-img product-img-zoom">
+                                                    <a href="{% url 'product_detail' data.id %}">
+                                                        <img class="default-img" src={{data.images.url}} alt="">
+                                                        <img class="hover-img" src="{{data.images.url}}" alt="">
+                                                    </a>
+                                                    </div>
+                                                  
+                                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                                    <span class="hot">Chill</span>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content-wrap">
+                                                    <div class="product-category">
+                                                    <a href="shop-grid-right.html">{{data.category}}</a>
+                                                    </div>
+                                                    <h2><a href="shop-product-right.html">{{data.product_name}}</a></h2>
+                                                    <div class="rating-result" title="90%">
+                                                    <span>
+                                                        <span>25%</span>
+                                                    </span>
+                                                    </div>
+                                                    <div class="product-price">
+                                                    <span>${{data.price}} </span>
+                                                    <span class="old-price">${{data.oldprice}}</span>
+                                                    </div>
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {% endfor%}
+                                    {% else %}
+                                        <div class="col-12 m-5">
+                                            <h4>Sorry 🤔🥲..<br>No products found for the search query..</h4>
+                                        </div>
+                                    {% endif %}
+                                   
+                                    </div>
+                                </div>
+                            </div>        
+                        </div>
+                    </div>
+                </div>                    
+            </div>                  
+        </section>
+       
+        <section class="pt-25 pb-15">
+            
+            <div class="container wow fadeIn animated">
+                <h3 class="section-title mb-20"><span>Newly</span> Added</h3>
+                
+                <div class="carausel-6-columns-cover position-relative">
+                    <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-2-arrows"></div>
+                    <div class="carausel-6-columns carausel-arrow-center" id="carausel-6-columns-2">
+                          {% for product in newly_added_products %} 
+                        <div class="product-cart-wrap small hover-up">
+                          
+
+                            <div class="product-img-action-wrap">
+
+                                 
+                                <div class="product-img product-img-zoom">
+                                   
+                                    <a>
+                                       
+                                        <img class="default-img" src="{{product.images.url}}" alt="">
+                                        <img class="hover-img" src="{% static 'cakeapp/imgs/shop/product-2-2.jpg'%}" alt="">
+                                    </a>
+                                </div>
+                             
+                                <div class="product-badges product-badges-position product-badges-mrg">
+                                    <span class="hot">Hot</span>
+                                </div>
+                            </div>
+                            <div class="product-content-wrap">
+                                <h2><a >{{product.product_name}}</a></h2>
+                                <div class="rating-result" title="90%">
+                                    <span>
+                                    </span>
+                                </div>
+                                <div class="product-price">
+                                    <span>${{product.price}} </span>
+                                    <span class="old-price">${{product.oldprice}}</span>
+                                   
+                                </div>
+                                 
+                            </div>
+                           
+                        </div>
+                       {% endfor%} 
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+        {% endblock %}
+      
+   

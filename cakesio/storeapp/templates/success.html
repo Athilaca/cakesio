@@ -1,0 +1,17 @@
+{% extends "cakebase.html" %}
+{% load static%}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<div class="container m-5">
+    <div class="card m-5">
+        <div class="card-body m-5">
+    <h3 class="text-center text-success">Order is Successfull <i class="fas fa-check-circle"></i></h3>
+    <p class="text-center"> Thanku for ordering..visit again !!</p>
+   
+        </div>
+    </div>
+    <a href="{% url 'home' %}" class="text-center m-5" style="text-decoration: underline;">Back to Shop page</a>
+    <a href="{% url 'account' %}" class="text-center m-5" style="text-decoration: underline;">Go to My orders for order details</a>
+</div>
+{% endblock %}
