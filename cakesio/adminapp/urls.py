@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('admin_login',views.admin_login,name="adminlogin"),
-    path('admin_index',views.admin_index,name="admin_index"),
+    path('admin_dashboard',views.admin_dashboard,name="admin_dashboard"),
     path('admin_user',views.admin_user,name="admin_user"),
     path('block_user<int:user_id>',views.block_user,name='block_user'),
     path('unblock_user<int:user_id>',views.unblock_user,name='unblock_user'),
@@ -18,10 +18,10 @@ urlpatterns = [
     path('admin_logout',views.admin_logout,name="admin_logout"),
     path('order_details/<int:order_id>/',views.order_details,name="order_details"),
     path('banners',views.banner,name="banners"),
+    path('admin_editbanner/<int:id>/',views.admin_editbanner,name="admin_editbanner"),
     path('sales_report',views.sales_report,name="sales_report"),
     path('product_variation',views.product_variation,name="product_variation"),
     path('coupon',views.coupon,name="coupon"),
-    # path('sales-chart-data/',views. SalesChartDataView.as_view(), name='sales-chart-data'),
-    # path('sales-chart/', views.SalesChartView.as_view(), name='sales-chart'),
+   
 
 ]

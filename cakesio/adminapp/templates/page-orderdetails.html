@@ -25,13 +25,12 @@
                             <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="status" id="statusSelect">
                                 <option value="none">Change status</option>
                              
-                                {% comment %} <option value="confirmed" {% if order_details.status == "confirmed" %} selected {% endif %}>Confirmed</option> {% endcomment %}
                                 <option value="shipped" {% if order_details.status == "shipped" %} selected {% endif %}>Shipped</option>
                                 <option value="delivered"  {% if order_details.status == "delivered" %} selected {% endif %}>Delivered</option>
                                 <option value="cancelled"  {% if order_details.status == "cancelled" %} selected {% endif %}>cancelled</option>
                             </select>
                             <button class="btn btn-primary" href=""  type="submit">Save</button>
-                            {% comment %} <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a> {% endcomment %}
+                          
                         </form>
                         </div>
                     

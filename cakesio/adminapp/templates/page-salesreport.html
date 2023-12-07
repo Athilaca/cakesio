@@ -4,7 +4,7 @@
     <div class="card mb-4">
       <header class="card-header">
         <h4 class="card-title">Sales Report</h4>
-        {% comment %} Selected Date: {{ selected_date|date:'Y-m-d' }} {% endcomment %}
+        
         <form method="get" action="{% url 'sales_report' %}">
           <div >
             <div>
@@ -39,9 +39,7 @@
           
          
          <div>
-    {% comment %} <a href="{% url 'sales_report' %}" class="btn btn-md rounded font-sm hover-up">
-        Export
-    </a> {% endcomment %}
+   
    
 </div>
 
@@ -325,28 +323,6 @@
   </div>
 </div>
 
-{% comment %} <script>
-    function exportSalesReport() {
-        // Make an AJAX request to your Django view
-        $.ajax({
-            url: '{% url "sales_report" %}?export',
-            method: 'GET',
-            success: function(data) {
-                // Create a Blob from the data received
-                var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-                // Create a link element and trigger a download
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'sales_report.xlsx';
-                link.click();
-            },
-            error: function(error) {
-                console.error('Export failed:', error);
-            }
-        });
-    }
-</script> {% endcomment %}
 
 {% endblock %}
 

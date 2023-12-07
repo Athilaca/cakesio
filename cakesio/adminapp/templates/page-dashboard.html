@@ -1,0 +1,149 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Dashboard </h2>
+                   
+                </div>
+                <div>
+                    <a href="{% url 'sales_report' %}" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Revenue</h6>
+                                <span>${{total_amount}}</span>
+                                <span class="text-sm">
+                                    Shipping fees are not included
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Orders</h6> <span>{{total_orders}}</span>
+                                <span class="text-sm">
+                                    Excluding orders in transit
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Products</h6> <span>{{total_products}}</span>
+                                <span class="text-sm">
+                                    In {{ total_categories}} Categories
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Customers</h6> <span>{{total_users}}</span>
+                                <span class="text-sm">
+                                    Based in your local time.
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+           <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card mb-4 ">
+                        
+                        <article class="card-body ">
+                             <h5 class="card-title">Sale statistics</h5>
+                            
+                            <canvas id="salesChart" height="150px"></canvas>
+                         
+                        </article>
+                    
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+      
+        </section>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize the chart with default data
+    updateChart();
+});
+
+function updateChart() {
+    
+
+    // Fetch data for the selected date using AJAX
+    fetch('/admin_dashboard/', {
+        headers:{
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        })
+        .then(response => response.json())
+        .then(data => {
+           
+            // Update the chart data
+            salesChart.data.labels = [ 'Monthly', 'Yearly'];
+            salesChart.data.datasets[0].data = [data.monthly_sales_sum, data.yearly_sales_sum];
+            salesChart.update();
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+var ctx = document.getElementById('salesChart').getContext('2d');
+var salesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Monthly', 'Yearly'],
+        datasets: [{
+            label: 'Total Sales',
+            data: [
+                {{ monthly_sales }},
+                {{ yearly_sales}}
+            ],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script> 
+
+    
+{% endblock %}
+
+        

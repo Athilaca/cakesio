@@ -47,7 +47,7 @@ def add_cart(request,product_id):
                     messages.error(request, "Sorry, there is not enough stock available.")
         
                 return redirect('cart')  
-    messages.warning(request, "please login here to continue..")
+   
     return redirect('login') 
 
   
@@ -197,6 +197,7 @@ def order(request):
            
             wallet.balance -= total
             wallet.save()
+            return redirect(create_order)
         
         else:
 
@@ -280,13 +281,13 @@ def new_address(request):
             
             
     
-    # return render(request,'shop-checkout.html',{'cartitems': cartitems})
+   
     return redirect(order)
 
 def update_quantity(request):
    
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-    # if request.method == 'POST' and request.is_ajax():
+   
         item_id = request.POST.get('item_id')
        
         is_increase = request.POST.get('increase') 
@@ -338,10 +339,7 @@ def apply_coupon(request):
             )
             user = request.user
             
-            # if coupon.is_expired():
-            #     messages.warning(request, "The entered coupon has expired.")
-            # elif coupon.used:
-            #     messages.warning(request, "The coupon has already been used.")     
+           
             if user not in coupon.users.all():
             
                 coupon.users.add(user)  

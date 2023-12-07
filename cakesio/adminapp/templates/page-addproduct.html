@@ -31,7 +31,7 @@
                            
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="product_name" value={{datas.product_name}}>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="product_name" value="{{datas.product_name}}">
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
@@ -42,14 +42,14 @@
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="$" type="text" class="form-control" name="price" value={{datas.price}}>
+                                                <input placeholder="$" type="text" class="form-control" name="price" value="{{datas.price}}">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">old price</label>
-                                            <input placeholder="$" type="text" name="oldprice" class="form-control" value={{datas.oldprice}}>
+                                            <input placeholder="$" type="text" name="oldprice" class="form-control" value="{{datas.oldprice}}">
                                         </div>
                                     </div>
                                     
@@ -58,12 +58,15 @@
                                     <label class="form-label">Category</label>
                                    <select class="form-select" name="category">
                                         {% for i in category %}
-                                        <option value="{{ i.id }}"> {{i.category_name}} </option>
+                                        <option value="{{ i.id}}"  {% if i.id == datas.category.id %}selected{% endif %}> {{i.category_name}} </option>
                                         {% endfor %}
                                        
                                     </select>
                                 </div>
-                               
+                               <div class="col-sm-6 mb-3">
+                                <label class="form-label">Is Seasonal</label>
+                                <input type="checkbox" name="seasonal" {% if datas.is_seasonal %}checked{% endif %}>
+                            </div>
                         </div>
                     </div> 
                     
@@ -79,17 +82,19 @@
                                 <label>product-image</label>
                                 <img src="{{datas.images.url}}" alt="">
                                
-                                <input class="form-control" type="file" name="images" value={{datas.images}} >
+                                <input class="form-control" type="file" name="images" value="{{datas.images}}" >
+                                {% if not datas.is_seasonal %}
                                 <div class="input-upload">
                                     <label>front-image</label>
                                     <img src="{{datas.front_image.url}}" alt="">
-                                    <input class="form-control" type="file" name="front_image" value={{datas.front_image}} >
+                                    <input class="form-control" type="file" name="front_image" value="{{datas.front_image}}" >
                                 </div>
                                 <div class="input-upload">
                                     <label>top-image</label>
                                     <img src="{{datas.top_image.url}}" alt="">
-                                    <input class="form-control" type="file" name="top_image"  value={{datas.top_image}}>
+                                    <input class="form-control" type="file" name="top_image"  value="{{datas.top_image}}">
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div> 

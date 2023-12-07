@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+
+ <section class="content-main">
+    <div class="row">
+        <div class="col-9">
+                    <div class="content-header">
+                       <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token%}
+                              
+                          
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Save banner</button>
+                        </div>
+                    </div>
+                </div>
+            <div class="col-12 col-lg-9">
+
+              
+             <div class="card mb-4">
+                 <div class="card-header">
+                            <h4>Media</h4>
+                            
+                        </div>
+                        <div class="card-body">
+                             <label class="form-label">Shop  banner3</label>
+                            <div class="input-upload">
+                                  
+                                <img src="{{banner.banner1.url}}" alt="">
+                               
+                                <input class="form-control" type="file" name="banner1" value={{banner.banner1}} >
+                                  <label class="form-label">Shop  banner3</label>
+                                <div class="input-upload">
+                                    
+                                    <img src="{{banner.banner2.url}}" alt="">
+                                    <input class="form-control" type="file" name="banner2" value={{banner.banner2}} >
+                                </div>
+                                  <label class="form-label">Shop  banner3</label>
+                                <div class="input-upload">
+                                     
+                                    <img src="{{banner.banner3.url}}" alt="">
+                                    <input class="form-control" type="file" name="banner3"  value={{banner.banner3}}>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card-body">
+                             <label class="form-label">Shop  banner3</label>
+                            <div class="input-upload">
+                                  
+                                <img src="{{banner.offer_banner1.url}}" alt="">
+                               
+                                <input class="form-control" type="file" name="offer_banner1" value={{banner.offer_banner1}} >
+                                   <label class="form-label">Shop  banner3</label>
+                                <div class="input-upload">
+                                    
+                                    <img src="{{banner.offer_banner2.url}}" alt="">
+                                    <input class="form-control" type="file" name="offer_banner2" value={{banner.offer_banner2}} >
+                                </div>
+                                <div class="input-upload">
+                                    
+                                    <img src="{{banner.offer_banner3.url}}" alt="">
+                                    <input class="form-control" type="file" name="offer_banner3"  value={{banner.offer_banner3}}>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+               
+                </form>
+             
+                </div>
+            </div>
+        </div>
+
+        
+    </section>   
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html"%}
+{% load static%}
+
+{% block content %}
+<section class="content-main">
+    {% for banner in banner %}
+            <div class="content-header">
+                <div>
+                  <h2 class="content-title card-title">Banners </h2> 
+                  <a href="{% url 'admin_editbanner' banner.id %}" class="btn btn-primary m-3">Edit banner</a>
+                </div>
+            </div>
+        <div class="card mb-4">
+               
+            <div class="card-body">
+                  
+                <div class="mt-4">
+                    <div class="text-muted font-size-14">
+                            
+                            <img src="{{banner.banner1.url}}" alt="">
+                           
+                             <img src="{{banner.banner2.url}}" alt="">
+                            
+                             
+                              <img src="{{banner.banner3.url}}" alt="">
+                            
+                           
+                       
+                  
+                    </div>
+                </div>
+            </div>
+        </div> <!-- card end// -->
+
+         <div class="card mb-4">
+               
+            <div class="card-body">
+                  
+                <div class="mt-4">
+                    <div class="text-muted font-size-14">
+                      
+                           
+                            <img src="{{banner.offer_banner1.url}}" alt="">
+                           
+                             <img src="{{banner.offer_banner2.url}}" alt="">
+                           
+                             
+                              <img src="{{banner.offer_banner3.url}}" alt="">
+                            
+                           
+                       
+                    
+                      
+                    </div>
+                </div>
+            </div>
+        
+    {% endfor %}
+</section>
+         
+        {% endblock %}
+        

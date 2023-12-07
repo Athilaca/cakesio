@@ -1,40 +1,21 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 {% load static%}
-
 {% block content %}
-        <section class="content-main">
-            <form method="POST" enctype="multipart/form-data" action="{% url 'banners' %}">
-                {% csrf_token %}
+ <section class="content-main">
             <div class="content-header">
                 <div>
-                   
+                    <h2 class="content-title card-title">Coupon </h2>
+                 
                 </div>
+              
             </div>
-            <div class="card mb-4">
-               
-                <div class="card-body">
-                    <h5 class="card-title">Banner</h5>
-                    <div class="mt-4">
-                        <div class="text-muted font-size-14">
-                            <div class="input-upload">
-                                <label>SELECT BANNER</label>
-                                <img src="" alt="">
-                               
-                                <input class="form-control" type="file" name="banner" >
-                            </div>
-                        </div>
-                      <button type="submit" class="btn btn-primary m-3">create banner</button>
-                    </div>
-                </div>
-            </div> <!-- card end// -->
-        </form>
-
-        <form method="POST" action="{% url 'coupon' %}">
+       
+                 <form method="POST" action="{% url 'coupon' %}">
             {% csrf_token%}
         <div class="card mb-4">
            
             <div class="card-body">
-                <h5 class="card-title">Coupon</h5>
+              
                 <div class="mt-4">
                     <div class="text-muted font-size-14">
                         <label>CREATE COUPON</label>
@@ -59,6 +40,4 @@
         
     </form>
         </section>
-         
         {% endblock %}
-        

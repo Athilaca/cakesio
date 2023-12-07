@@ -10,12 +10,12 @@ from datetime import datetime
 from django.db.models import Sum,Q
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from chartjs.views.lines import BaseLineChartView
 from .resources import OrderResource
 from django.http import JsonResponse
+from django.core.serializers import serialize
 
-from io import BytesIO
-# from .resources import OrderResource
+
+
 
 
 # Create your views here.
@@ -29,7 +29,7 @@ def admin_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return redirect(admin_index)         
+            return redirect(admin_dashboard)         
         else:
             messages.error(request, 'Invalid login credentials. Please try again.')
             return redirect(admin_login)
@@ -38,13 +38,20 @@ def admin_login(request):
 
 @login_required(login_url='adminlogin')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def admin_index(request):
+def admin_dashboard(request):
     
         total_orders = Order.objects.count()
         total_amount = Order.objects.aggregate(total_amount=Sum('bill_amount'))['total_amount'] or 0
         total_products = Product.objects.count()
         total_users = CustomUser.objects.count()
         total_categories = Category.objects.count()
+        current_month = timezone.now().month
+        current_year = timezone.now().year
+    
+    
+        monthly_sales_sum = Order.objects.filter(created_date__month=current_month).aggregate(monthly_sales=Sum('bill_amount'))['monthly_sales'] or 0
+        yearly_sales_sum = Order.objects.filter(created_date__year=current_year).aggregate(yearly_sales=Sum('bill_amount'))['yearly_sales'] or 0
+
         
         
         context = {
@@ -53,15 +60,19 @@ def admin_index(request):
             'total_products': total_products,
             'total_users': total_users,
             'total_categories': total_categories,
+            'monthly_sales': monthly_sales_sum,
+            'yearly_sales': yearly_sales_sum,
         }
-        
-        
-        return render(request, 'page-index.html', context)
+        if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+           return JsonResponse(context)
+    
+       
+        return render(request, 'page-dashboard.html', context)
 
     
    
 
-
+@login_required(login_url='adminlogin')
 def admin_user(request):
    
     data=CustomUser.objects.all()
@@ -188,7 +199,7 @@ def admin_addproduct(request):
 
 
 def admin_editproduct(request,id):
-
+    category=Category.objects.all()
     Product_object=Product.objects.get(id=id)
 
     if request.method == 'POST':
@@ -198,19 +209,21 @@ def admin_editproduct(request,id):
         stock=request.POST.get("stock")
         oldprice=request.POST.get("oldprice")
         front_image=request.FILES.get("front_image") 
-        top_image=request.FILES.get("top_image")        
+        top_image=request.FILES.get("top_image")
+        is_seasonal = request.POST.get("seasonal") == "on" 
+
         if images:
             Product_object.images=images
-             
-        if top_image:
+        if top_image :
             Product_object.top_image=top_image
-        if front_image:
+        if front_image :
             Product_object.front_image=front_image
       
         Product_object.product_name= product_name
         Product_object.description=description
         Product_object.stock=stock
         Product_object.oldprice=oldprice
+        Product_object.is_seasonal =is_seasonal
         
     
         Product_object.save()
@@ -218,7 +231,7 @@ def admin_editproduct(request,id):
         return redirect('admin_product')
 
 
-    return render(request,'page-addproduct.html',{'datas':Product_object})
+    return render(request,'page-addproduct.html',{'datas':Product_object,'category':category})
 
 def product_delete(request,id):
    
@@ -240,6 +253,7 @@ def admin_logout(request):
     logout(request)
        
     return redirect(admin_login)
+
    
 @login_required(login_url='adminlogin') 
 def admin_orders(request):
@@ -261,24 +275,47 @@ def order_details(request,order_id):
     context={'order_items':order_items,'order_details':order_details}
 
     return render (request,'page-orderdetails.html',context)
-    
+
+@login_required(login_url='adminlogin')     
 def banner(request):
-    if request.method=="POST":
-        image=request.FILES.get("banner")   
-        banner=Banner(banner=image)
-        banner.save() 
 
-    return render(request,'page-blank.html')    
+    banner=Banner.objects.all()
+    return render(request,'page-banner.html',{'banner':banner})   
+ 
 
+def admin_editbanner(request,id):
 
+    banner_object=Banner.objects.get(id=id)
+    if request.method == 'POST':
+        banner1=request.FILES.get("banner1")
+        banner2=request.FILES.get("banner2")
+        banner3=request.FILES.get("banner3")
+        offer_banner1=request.FILES.get("offer_banner1")
+        offer_banner2=request.FILES.get("offer_banner2")
+        offer_banner3=request.FILES.get("offer_banner3")
+        
+        if banner1:
+            banner_object.banner1 = banner1
+        if banner2:
+            banner_object.banner2 = banner2
+        if banner3:
+            banner_object.banner3 = banner3
+        if offer_banner1:
+            banner_object.offer_banner1 = offer_banner1
+        if offer_banner2:
+            banner_object.offer_banner2 = offer_banner2
+        if offer_banner3:
+            banner_object.offer_banner3 = offer_banner3
+
+        banner_object.save()
+        return redirect('banner')
+        
+    return render(request,'page-editbanner.html',{'banner':banner_object})
 
 
 def sales_report(request):
    
     selected_date_str = request.GET.get('selected_date')
-    
-   
-   
     context = {}
     
     if selected_date_str:
@@ -313,9 +350,7 @@ def sales_report(request):
         }
 
         if 'export' in request.GET:
-            # Create a resource and export the queryset
-           
-
+    
             resource = OrderResource()
             dataset = resource.export(yearly_sales)
 
@@ -328,7 +363,9 @@ def sales_report(request):
             
     return render(request, 'page-salesreport.html', context)
 
+@login_required(login_url='adminlogin') 
 def product_variation(request):
+    
     variations=Variation.objects.all()
     product=Product.objects.all()
   
@@ -362,8 +399,9 @@ def product_variation(request):
 
       
         return redirect('product_variation')
-    return render(request,'page-variation.html',{'product':product,'variations':variations})    
-
+    return render(request,'page-variation.html',{'product':product,'variations':variations}) 
+   
+@login_required(login_url='adminlogin') 
 def coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
@@ -387,38 +425,6 @@ def coupon(request):
         except ValueError:
             return HttpResponse('Invalid discount percentage or expiry date format.') 
            
-    return render(request,'page-blank.html')
+    return render(request,'page-coupon.html')
 
-# class SalesChartDataView(View):
-#     def get(self, request, *args, **kwargs):
-#         sales_data = Order.objects.values('created_date__month').annotate(total_sales=models.Sum('bill_amount'))
-#         labels = [entry['created_date__month'] for entry in sales_data]
-#         data = [entry['total_sales'] for entry in sales_data]
 
-#         chart_data = {
-#             'labels': labels,
-#             'datasets': [{
-#                 'label': 'Total Sales',
-#                 'data': data,
-#                 'backgroundColor': 'rgba(75, 192, 192, 0.2)',
-#                 'borderColor': 'rgba(75, 192, 192, 1)',
-#                 'borderWidth': 1,
-#                 }]
-#         }
-
-#         return JsonResponse(chart_data)
-
-# class SalesChartView(BaseLineChartView):
-#     def get_labels(self):
-#         sales_data = Order.objects.values('created_date__month').annotate(total_sales=models.Sum('bill_amount'))
-#         return [entry['created_date__month'] for entry in sales_data]
-
-#     def get_providers(self):
-#         return ['Total Sales']
-
-#     def get_data(self):
-#         sales_data = Order.objects.values('created_date__month').annotate(total_sales=models.Sum('bill_amount'))
-#         return [[entry['total_sales'] for entry in sales_data]]
-
-# def sales_chart(request):
-#     return render(request, 'sales_chart.html')
