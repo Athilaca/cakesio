@@ -32,6 +32,7 @@ def home(request,category_slug=None,price_range=None):
         categories=Category.objects.all()
         products = Product.objects.filter(is_seasonal=False)
         
+        
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
             products = Product.objects.filter(category=category,is_seasonal=False)
@@ -319,9 +320,10 @@ def order_view(request,order_id):
 
 def order_cancel(request,order_id):
     order=Order.objects.get(id=order_id)
+    payment_method = order.payment_method
     order.delete()
 
-    if order.payment_method != "cash_on_delivery":
+    if payment_method != "Cash_on_delivery":
        
         user = order.user
         wallet = Wallet.objects.get(user=user)

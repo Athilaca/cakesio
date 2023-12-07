@@ -17,38 +17,41 @@ from django.shortcuts import render, redirect, get_object_or_404
 
   
 def add_cart(request,product_id):
-    if request.user.is_authenticated: 
+        
         if request.method == 'POST':
-            product = Product.objects.get(id=product_id)
-            weight=request.POST.get('weightlist')
-            
-            if weight == "":
-              weight = 1
-            
-
-        
-            varient=Variation.objects.get(product=product,weight=weight)
-
-            if product.seasonal_offer and product.seasonal_offer.discount_percentage:
-                discounted_price = calculate_discounted_price(product.price, product.seasonal_offer.discount_percentage)
-
-                cart_item,created = CartItem.objects.get_or_create(user=request.user, discounted_price=discounted_price,variations=varient)
-                
+            if  not request.user.is_authenticated:
+                return redirect('login')
             else:
+                product = Product.objects.get(id=product_id)
+                weight=request.POST.get('weightlist')
                 
-                cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient)
+                if weight == "":
+                   weight = 1
                 
-            if not created:
-                if varient.stock >= cart_item.quantity + 1:
-                    cart_item.quantity += 1
-                    cart_item.save()
 
+            
+                varient=Variation.objects.get(product=product,weight=weight)
+
+                if product.seasonal_offer and product.seasonal_offer.discount_percentage:
+                    discounted_price = calculate_discounted_price(product.price, product.seasonal_offer.discount_percentage)
+
+                    cart_item,created = CartItem.objects.get_or_create(user=request.user, discounted_price=discounted_price,variations=varient)
+                    
                 else:
-                    messages.error(request, "Sorry, there is not enough stock available.")
-        
-                return redirect('cart')  
-   
-    return redirect('login') 
+                    
+                    cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient)
+                    
+                if not created:
+                    if varient.stock >= cart_item.quantity + 1:
+                        cart_item.quantity += 1
+                        cart_item.save()
+
+                    else:
+                        messages.error(request, "Sorry, there is not enough stock available.")
+                    
+                    return redirect('cart')  
+        return redirect(add_cart,product_id)
+     
 
   
 def shop_cart(request):

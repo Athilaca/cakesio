@@ -16,22 +16,7 @@
                        
     <main class="main">
         {% for banner in banners %}
-        {% comment %} <section class="main-banner banner mb-20 container" style="background: url({{banner.banner1.url}});
-        background-repeat: no-repeat;
-        background-size: 100% 100%; height:500px; padding:50px;">
        
-                                    <div class="col-lg-5 col-md-6 ">
-                                        <div class="hero-slider-content-2" >
-                                            <h4 class="animated">Welcome</h4>
-                                            <h3 class="animated fw-900">Trending Desserts</h3>
-                                            <h2 class="animated fw-900 text-brand">More demanded Cakes</h2>
-                                            <p class="animated">Save more with coupons & up to 25% off</p>
-                                            <a class="animated btn btn-brush btn-brush-1" href="shop-product-right.html" tabindex="0"> Get It Now </a>
-                                        </div>  
-                                        
-                                    </div>
-        </section>
-         {% endcomment %}
         <section class="banners mb-20">
             <div class="container">
                 <div class="row">
@@ -184,7 +169,7 @@
                                     <a>
                                        
                                         <img class="default-img" src="{{product.images.url}}" alt="">
-                                        <img class="hover-img" src="{% static 'cakeapp/imgs/shop/product-2-2.jpg'%}" alt="">
+                                        <img class="hover-img" src="{{product.images.url}}" alt="">
                                     </a>
                                 </div>
                              

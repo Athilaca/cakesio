@@ -106,12 +106,10 @@
                                          
                                             <div class="product-extra-link2">
                                                
-                                                   <button  type="submit" class="button button-add-to-cart">Add to cart</button>
-                                              
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                    <button type="submit" class="button button-add-to-cart">Add to cart</button>
                                                
-                                            </div>       
-                                        </div>
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            </div>
                                       
                                                
                                         <ul class="product-meta font-xs color-grey mt-50">
@@ -135,7 +133,9 @@
             </div>
         </section>
     </main>
-        <script>
+    <script>
+    
+
         function setSelectedWeight(element, weight) {
             // Set the selected weight in the hidden input
             document.getElementById('weightlist').value = weight;
@@ -162,5 +162,6 @@
             });
         }
     </script>
+ 
     {% endblock %}
    
