@@ -45,13 +45,11 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href=""> <i class="icon material-icons md-shopping_bag"></i>
+                <li class="menu-item ">
+                    <a class="menu-link" href=""{% url 'admin_product' %}""> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-                    <div class="submenu">
-                        <a href="{% url 'admin_product' %}">Product List</a>
-                    </div>
+                   
                 </li>
                  <li class="menu-item ">
                     <a class="menu-link" href="{% url 'admin_category'%}"> <i class="icon material-icons md-shopping_bag"></i>

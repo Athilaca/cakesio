@@ -100,6 +100,7 @@
                     
                                     <label class="form-label pt-5">Seasonaloffer</label>
                                    <select class="form-select" name="seasonal_offer">
+                                        <option value="" {% if not datas.seasonal_offer %}selected{% endif %}>None</option>
                                         {% for i in seasonal_offer %}
                                         <option value="{{ i.id}}"  {% if i.id == datas.seasonal_offer.id %}selected{% endif %}> {{i.name}} </option>
                                         {% endfor %}

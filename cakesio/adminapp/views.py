@@ -178,6 +178,7 @@ def admin_addproduct(request):
             top_image=request.FILES.get("top_image")
             category=request.POST.get("category")
             seasonal_offer=request.POST.get('seasonal_offer')
+
             if not product_name or not description:
                raise ValidationError( "Product Name and description are required fields.")
            
@@ -199,7 +200,7 @@ def admin_addproduct(request):
         front_image=front_image,top_image=top_image,category=category,seasonal_offer=seasonal_offer)
         myuser.save()
       
-        return redirect('admin_product')
+        return redirect('product_variation')
     return render(request, 'page-addproduct.html', {'category':categories,'seasonal_offer':seasonal_offer})
 
 
@@ -207,16 +208,18 @@ def admin_addproduct(request):
 def admin_editproduct(request,id):
     category=Category.objects.all()
     Product_object=Product.objects.get(id=id)
+    seasonal_offer = SeasonalOffer.objects.all()
 
     if request.method == 'POST':
         product_name=request.POST.get("product_name")
         description=request.POST.get("description")
         images=request.FILES.get("images")
-        stock=request.POST.get("stock")
         oldprice=request.POST.get("oldprice")
         front_image=request.FILES.get("front_image") 
         top_image=request.FILES.get("top_image")
         is_seasonal = request.POST.get("seasonal") == "on" 
+        seasonal_offer= request.POST.get("seasonal_offer")
+        category=request.POST.get("category")
 
         if images:
             Product_object.images=images
@@ -227,17 +230,25 @@ def admin_editproduct(request,id):
       
         Product_object.product_name= product_name
         Product_object.description=description
-        Product_object.stock=stock
         Product_object.oldprice=oldprice
         Product_object.is_seasonal =is_seasonal
-        
+
+        if seasonal_offer == "":
+            Product_object.seasonal_offer = None
+        else:    
+            seasonal_offer_instance = SeasonalOffer.objects.get(pk=int(seasonal_offer))
+            Product_object.seasonal_offer = seasonal_offer_instance
+
+        category_instance = Category.objects.get(pk=int(category))
+        Product_object.category = category_instance
+
     
         Product_object.save()
         
         return redirect('admin_product')
 
 
-    return render(request,'page-addproduct.html',{'datas':Product_object,'category':category})
+    return render(request,'page-addproduct.html',{'datas':Product_object,'category':category,'seasonal_offer': seasonal_offer})
 
 def product_delete(request,id):
         product=Product.objects.get(id=id)
@@ -439,3 +450,9 @@ def coupon(request):
            
     return render(request,'page-coupon.html')
 
+def variation_delete(request,id):
+   
+        dele=Variation.objects.get(id=id)
+      
+        dele.delete()
+        return redirect(product_variation)
