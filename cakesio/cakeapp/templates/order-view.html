@@ -72,6 +72,7 @@
                                 <th width="40%">Image</th>
                                 <th width="40%">Product</th>
                                 <th width="20%">Unit Price</th>
+                                <th width="20%">Discount Price</th>
                                 <th width="20%">Quantity</th>
                                 <th width="20%" class="text-end">Total</th>
                             
@@ -91,8 +92,13 @@
                                         <div class="info">{{order.variant.product.product_name}} </div>
                                     </a>
                                 </td>
+                                <td>{{ order.variant.price|floatformat:2 }}</td>
                                 
-                                <td> {{order.variant.price}} </td>
+                                {% if order.variant.product.is_seasonal and order.variant.product.seasonal_offer %}
+                                    <td>{{ order.variant.get_price|floatformat:2 }}</td>
+                                {% else %}
+                                    <td>{{0|floatformat:2 }}</td>
+                                {% endif %}
                                 
                                 <td>{{order.quantity}} </td>
                                 <td class="text-end"> ${{order.sub_total}} </td>

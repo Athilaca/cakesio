@@ -17,9 +17,25 @@
                         <div class="col-lg-4 col-md-6 me-auto">
                             <input type="text" placeholder="Search..." class="form-control">
                         </div>
-                        
+                     
+                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                            <form id="statusForm"  action="{% url 'admin_orders' %}" method="get">
+                              
+                            <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="status" id="statusSelect" onchange="filterOrders()">
+                                <option value="none">Filter status</option>
+                                <option value="none">All</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="shipped" >Shipped</option>
+                                <option value="delivered" >Delivered</option>
+                                <option value="cancelled" >cancelled</option>
+                            </select>
+                           
+                          
+                            </form>
+                        </div>    
                         
                     </div>
+                    
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <div class="table-responsive">
@@ -75,5 +91,11 @@
                 </nav>
             </div>
         </section> <!-- content-main end// -->
+
+<script>
+    function filterOrders() {
+        document.getElementById("statusForm").submit();
+    }
+</script>
         {% endblock %}
  

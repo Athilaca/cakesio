@@ -7,9 +7,7 @@
                     <h2 class="content-title card-title">Categories </h2>
                     <p>Add, edit or delete a category</p>
                 </div>
-                <div>
-                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
-                </div>
+                
             </div>
             <div class="card">
                 <div class="card-body">
@@ -23,7 +21,7 @@
                                 {% endif %}
 
                              
-                            <form method='POST'>
+                            <form method='POST' enctype="multipart/form-data">
                                 {% csrf_token%}
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
@@ -38,7 +36,10 @@
                                     <label class="form-label">Description</label>
                                     <textarea placeholder="Type here" class="form-control" name='description'></textarea>
                                 </div>
-                                <div class="d-grid">
+                                <div class="input-upload">
+                                    <input class="form-control" type="file" name="category_image">
+                                </div>
+                                <div class="d-grid mt-3">
                                     <button  type="submit" class="btn btn-primary">Create category</button>
                                 </div>
                             </form>
@@ -52,8 +53,9 @@
                                             <th>ID</th>
                                             <th>Name</th>
                                             <th>Description</th>
+                                            <th>image</th>
                                             <th>Slug</th>
-                                            <th>Order</th>
+                                            
                                             <th >Action</th>
                                         </tr>
                                     </thead>
@@ -66,8 +68,9 @@
                                             <td>{{forloop.counter}}</td>
                                             <td><b>{{user.category_name}}</b></td>
                                             <td>{{user.description}}</td>
+                                            <td> <img src="{{user.category_image.url}}" class="img-sm img-thumbnail"></td>
                                             <td>{{user.slug}}</td>
-                                            <td>1</td>
+                                           
                                           
                                                
                                             <td>

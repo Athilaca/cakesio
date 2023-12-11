@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
-from cakeapp.models import CustomUser,ShippingAddress
+from cakeapp.models import *
 from storeapp.models import *
 from adminapp.models import *
 from django.core.validators import validate_email
@@ -23,23 +23,22 @@ from .models import *
 
 # Create your views here.
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-
-
 def home(request,category_slug=None,price_range=None):
    
         banner=Banner.objects.all()
-        newly_added_products = Product.objects.order_by('-id')
+        newly_added_products = Product.objects.filter(is_deleted=False).order_by('-id')[:10]
         categories=Category.objects.all()
-        products = Product.objects.filter(is_seasonal=False)
+        products = Product.objects.filter(is_deleted=False)
         
         
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
-            products = Product.objects.filter(category=category,is_seasonal=False)
+            products = Product.objects.filter(category=category,is_deleted=False)
         else:
-            products = Product.objects.filter(is_seasonal=False)
+            products = Product.objects.filter(is_deleted=False)
 
         if price_range:
+            
           
             if price_range == '0-300':
                 products = products.filter(price__gte=0, price__lte=300)
@@ -197,7 +196,7 @@ def perform_logout(request):
 def index(request):
     banner=Banner.objects.all()
     category=Category.objects.all()
-    product=Product.objects.all()[:10]
+    product=Product.objects.filter(is_deleted=False)[:10]
     return render(request,'index.html',{'banner':banner,'category':category,'product':product})
 
 
@@ -208,10 +207,11 @@ def product_detail(request,product_id):
   
     return render(request,'product-details.html',{'data':data})
 
-@login_required
+
 def account(request):
    
-   
+    if  not request.user.is_authenticated:
+        return redirect('login')
     addresses=ShippingAddress.objects.filter(user=request.user)
     order=Order.objects.filter(user=request.user).order_by('-id')
     wallet, created = Wallet.objects.get_or_create(user=request.user, defaults={'balance': 0.00})
@@ -304,7 +304,7 @@ def update_price(request):
         selected_weight = request.GET.get('selected_weight')
         product=Product.objects.get(id=product_id)
         variations=Variation.objects.get(product=product,weight=selected_weight)
-        new_price = variations.price
+        new_price = variations.get_price()
         new_stock= variations.stock
        
         return JsonResponse({'new_price': new_price, 'new_stock': new_stock})
@@ -344,5 +344,3 @@ def update_profile_pic(request):
    context={'form':form}
    return render(request,'profile.html',context)
 
-def base(request):
-    return render(request,'cakebase.html')

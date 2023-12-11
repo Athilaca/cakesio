@@ -18,5 +18,5 @@ urlpatterns = [
     path("update_profile_pic",views.update_profile_pic,name="update_profile_pic"),
     path('products/category/<slug:category_slug>/',views. home, name='home'),
     path('home/<str:price_range>/',views.home, name='home_price_range'),
-    path('base',views.base,name="base")
+   
 ]

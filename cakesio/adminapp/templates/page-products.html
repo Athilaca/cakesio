@@ -72,9 +72,15 @@
                                 <a href="{% url "admin_editproduct" data.id %}" class="btn btn-sm font-sm rounded btn-brand">
                                     <i class="material-icons md-edit"></i> Edit
                                 </a>
-                                <a href="{% url "product_delete" data.id %}" class="btn btn-sm font-sm btn-danger rounded ">
-                                    <i class="material-icons md-delete_forever "></i> Delete
+                             {% if data.is_deleted %}
+                                <a href="{% url 'product_delete' data.id %}" class="btn btn-sm font-sm btn-warning rounded">
+                                    <i class="material-icons md-delete_forever"></i>Undo
                                 </a>
+                            {% else %}
+                                <a href="{% url 'product_delete' data.id %}" class="btn btn-sm font-sm btn-danger rounded">
+                                    <i class="material-icons md-delete_forever "></i>Delete
+                                </a>
+                            {% endif %}
                             </div>
                         </div> <!-- row .// -->
                     </article> <!-- itemlist  .// -->
@@ -82,18 +88,7 @@
                 </div> <!-- card-body end// -->
                 {% endfor%}
             </div> <!-- card end// -->
-            <div class="pagination-area mt-30 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
-            </div>
+           
         </section> <!-- content-main end// -->
         {% endblock%}
        

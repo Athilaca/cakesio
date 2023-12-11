@@ -8,8 +8,7 @@
                             <form action="{% url 'home' %}" method="GET">
                                  
                             <input type="text" placeholder="Search for items..."  name="search" value="{{ request.GET.search }}">
-                             {% comment %} <button type="submit" class="btn btn-primary"><h6>Search</h6></button> {% endcomment %}
-                             
+                            
                             </form>
                         </div>
                     </div>
@@ -28,7 +27,7 @@
                                 <h4>Save 20% on <br>your birthdays</h4>
                                
                             </div>
-                             <a href="shop-grid-right.html">Click here to Shop Now <i class="fi-rs-arrow-right"></i></a>
+                            
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
@@ -38,7 +37,7 @@
                                <h4>Great Seasonal<br>Cakes</h4>
                                <h5> At 30% <br>Offer</h5>
                             </div>
-                            <a href="{% url 'offer' %}">Click here to Shop Now <i class="fi-rs-arrow-right"></i></a>
+                            {% comment %} <a href="{% url 'offer' %}">Click here to Shop Now <i class="fi-rs-arrow-right"></i></a> {% endcomment %}
                         </div>
                     </div>
                     <div class="col-lg-4 d-md-none d-lg-flex">
@@ -49,7 +48,7 @@
                                 <h4>Shop Today’s <br>Deals & Offers</h4>
                                 
                             </div>
-                            <a href="shop-grid-right.html">Shop Now <i class="fi-rs-arrow-right"></i></a>
+                        
                         </div>
                     </div>
                 </div>
@@ -111,7 +110,10 @@
                                                     </div>
                                                   
                                                     <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">Chill</span>
+                                                        {% if data.seasonal_offer %}
+                                                    <span class="hot">{{data.seasonal_offer.name}}</span>
+                                                  
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="product-content-wrap">
@@ -125,7 +127,7 @@
                                                     </span>
                                                     </div>
                                                     <div class="product-price">
-                                                    <span>${{data.price}} </span>
+                                                    <span>${{data.get_price}} </span>
                                                     <span class="old-price">${{data.oldprice}}</span>
                                                     </div>
                                                 
@@ -173,9 +175,7 @@
                                     </a>
                                 </div>
                              
-                                <div class="product-badges product-badges-position product-badges-mrg">
-                                    <span class="hot">Hot</span>
-                                </div>
+                                
                             </div>
                             <div class="product-content-wrap">
                                 <h2><a >{{product.product_name}}</a></h2>
@@ -184,7 +184,7 @@
                                     </span>
                                 </div>
                                 <div class="product-price">
-                                    <span>${{product.price}} </span>
+                                    <span>${{ product.price }} </span>
                                     <span class="old-price">${{product.oldprice}}</span>
                                    
                                 </div>

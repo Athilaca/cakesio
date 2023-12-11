@@ -23,16 +23,22 @@ class  Variation(models.Model):
 
     def __str__(self):
         return str( self.product)
-    # def soft_delete(self):
-    #     self.is_delete=True
-    #     self.is_available=False
-    #     self.save()
-
     
+    def get_price(self):
+        if self.product.is_seasonal and self.product.seasonal_offer:
+            # Calculate and return the seasonal price and discount amount
+            original_price = self.price
+            discount_percentage = self.product.seasonal_offer.discount_percentage
 
-    # def get_id(self):
-    #     return reverse("edit-variant",args=[self.product.id,self.id])
+            # Calculate discounted price
+            discount_amount = (original_price * discount_percentage) / 100
+            seasonal_price = original_price - discount_amount
 
+            return seasonal_price
+       
+        else:
+            # Return the regular price
+            return self.price
 
 
 class CartItem(models.Model):

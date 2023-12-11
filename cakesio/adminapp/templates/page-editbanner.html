@@ -23,47 +23,89 @@
                             
                         </div>
                         <div class="card-body">
-                             <label class="form-label">Shop  banner3</label>
-                            <div class="input-upload">
-                                  
-                                <img src="{{banner.banner1.url}}" alt="">
-                               
-                                <input class="form-control" type="file" name="banner1" value={{banner.banner1}} >
-                                  <label class="form-label">Shop  banner3</label>
+                            {% if banner.banner1 %}
+                                <label class="form-label">Shop Banner 1</label>
                                 <div class="input-upload">
-                                    
-                                    <img src="{{banner.banner2.url}}" alt="">
-                                    <input class="form-control" type="file" name="banner2" value={{banner.banner2}} >
+                                    <img src="{{ banner.banner1.url }}" alt="Shop Banner 1">
+                                    <input class="form-control" type="file" name="banner1">
                                 </div>
-                                  <label class="form-label">Shop  banner3</label>
+                            {% else %}
+                                <label class="form-label">Add Shop Banner 1</label>
                                 <div class="input-upload">
-                                     
-                                    <img src="{{banner.banner3.url}}" alt="">
-                                    <input class="form-control" type="file" name="banner3"  value={{banner.banner3}}>
+                                    <input class="form-control" type="file" name="banner1">
                                 </div>
-                            </div>
+                            {% endif %}
+
+                            {% if banner.banner2 %}
+                                <label class="form-label">Shop Banner 2</label>
+                                <div class="input-upload">
+                                    <img src="{{ banner.banner2.url }}" alt="Shop Banner 2">
+                                    <input class="form-control" type="file" name="banner2">
+                                </div>
+                            {% else %}
+                                <label class="form-label">Add Shop Banner 2</label>
+                                <div class="input-upload">
+                                    <input class="form-control" type="file" name="banner2">
+                                </div>
+                            {% endif %}
+
+                            {% if banner.banner3 %}
+                                <label class="form-label">Shop Banner 3</label>
+                                <div class="input-upload">
+                                    <img src="{{ banner.banner3.url }}" alt="Shop Banner 3">
+                                    <input class="form-control" type="file" name="banner3">
+                                </div>
+                            {% else %}
+                                <label class="form-label">Add Shop Banner 3</label>
+                                <div class="input-upload">
+                                    <input class="form-control" type="file" name="banner3">
+                                </div>
+                            {% endif %}
                         </div>
 
 
+
                         <div class="card-body">
-                             <label class="form-label">Shop  banner3</label>
-                            <div class="input-upload">
-                                  
-                                <img src="{{banner.offer_banner1.url}}" alt="">
-                               
-                                <input class="form-control" type="file" name="offer_banner1" value={{banner.offer_banner1}} >
-                                   <label class="form-label">Shop  banner3</label>
+                            {% if banner.offer_banner1 %}
+                                <label class="form-label">offer Banner 1</label>
                                 <div class="input-upload">
-                                    
-                                    <img src="{{banner.offer_banner2.url}}" alt="">
-                                    <input class="form-control" type="file" name="offer_banner2" value={{banner.offer_banner2}} >
+                                    <img src="{{ banner.offer_banner1.url }}" alt="Shop Banner 1">
+                                    <input class="form-control" type="file" name="offer_banner1">
                                 </div>
+                            {% else %}
+                                <label class="form-label">Add offer Banner 1</label>
                                 <div class="input-upload">
-                                    
-                                    <img src="{{banner.offer_banner3.url}}" alt="">
-                                    <input class="form-control" type="file" name="offer_banner3"  value={{banner.offer_banner3}}>
+                                    <input class="form-control" type="file" name="offer_banner1">
                                 </div>
-                            </div>
+                            {% endif %}
+
+                            {% if banner.offer_banner2 %}
+                                <label class="form-label">offer Banner 2</label>
+                                <div class="input-upload">
+                                    <img src="{{ banner.offer_banner2.url }}" alt="Shop Banner 2">
+                                    <input class="form-control" type="file" name="offer_banner2">
+                                </div>
+                            {% else %}
+                                <label class="form-label">Add offer Banner 2</label>
+                                <div class="input-upload">
+                                    <input class="form-control" type="file" name="offer_banner2">
+                                </div>
+                            {% endif %}
+
+                            {% if banner.offer_banner3 %}
+                                <label class="form-label">Shop Banner 3</label>
+                                <div class="input-upload">
+                                    <img src="{{ banner.offer_banner3.url }}" alt="Shop Banner 3">
+                                    <input class="form-control" type="file" name="offer_banner3">
+                                </div>
+                            {% else %}
+                                <label class="form-label">Add Shop Banner 3</label>
+                                <div class="input-upload">
+                                    <input class="form-control" type="file" name="offer_banner3">
+                                </div>
+                            {% endif %}
+                        </div>
+
                         </div>
                     </div> 
                

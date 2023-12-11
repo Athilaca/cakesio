@@ -18,39 +18,32 @@ from django.shortcuts import render, redirect, get_object_or_404
   
 def add_cart(request,product_id):
         
-        if request.method == 'POST':
-            if  not request.user.is_authenticated:
+    if request.method == 'POST':
+        if  not request.user.is_authenticated:
                 return redirect('login')
-            else:
-                product = Product.objects.get(id=product_id)
-                weight=request.POST.get('weightlist')
+        else:
+            product = Product.objects.get(id=product_id)
+            weight=request.POST.get('weightlist')
                 
-                if weight == "":
-                   weight = 1
+            if weight == "":
+                 weight = 1
                 
+            varient=Variation.objects.get(product=product,weight=weight)
 
-            
-                varient=Variation.objects.get(product=product,weight=weight)
-
-                if product.seasonal_offer and product.seasonal_offer.discount_percentage:
-                    discounted_price = calculate_discounted_price(product.price, product.seasonal_offer.discount_percentage)
-
-                    cart_item,created = CartItem.objects.get_or_create(user=request.user, discounted_price=discounted_price,variations=varient)
+            price = varient.get_price()
                     
-                else:
+            cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient,discounted_price=price)
                     
-                    cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient)
-                    
-                if not created:
-                    if varient.stock >= cart_item.quantity + 1:
+            if not created:
+                if varient.stock >= cart_item.quantity + 1:
                         cart_item.quantity += 1
                         cart_item.save()
 
-                    else:
-                        messages.error(request, "Sorry, there is not enough stock available.")
+                else:
+                    messages.error(request, "Sorry, there is not enough stock available.")
                     
-                    return redirect('cart')  
-        return redirect(add_cart,product_id)
+                return redirect('cart')  
+    return redirect('cart')
      
 
   
@@ -359,31 +352,10 @@ def apply_coupon(request):
     return redirect('cart')
 
 
-   
-
-
 def success(request):
 
     return render(request,"success.html")
 
-def offer(request):
-    current_date = timezone.now().date()
-    seasonal_offers = SeasonalOffer.objects.filter(start_date__lte=current_date, end_date__gte=current_date)
-    discounted_products_list = []
-
-    for offer in seasonal_offers:
-        discounted_products = Product.objects.filter(seasonal_offer=offer, is_seasonal=True) 
-       
-        for product in discounted_products :
-            discounted_price = calculate_discounted_price(product.price, offer.discount_percentage)
-            discounted_products_list.append({'product': product, 'discounted_price': discounted_price})
-          
-    return render(request,'shop-offer.html',{'seasonal_offers': seasonal_offers,'discounted_products': discounted_products_list})
-
-def calculate_discounted_price(original_price, discount_percentage):
-    discount_amount = (original_price * discount_percentage) / 100
-    discounted_price = original_price - discount_amount
-    return discounted_price
 
 
 def create_order(request):

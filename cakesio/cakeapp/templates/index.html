@@ -100,12 +100,15 @@
                                                     <div class="product-img product-img-zoom">
                                                     <a href="{% url 'home' %}">
                                                         <img class="default-img" src={{product.images.url}} alt="">
-                                                        <img class="hover-img" src="{{data.images.url}}" alt="">
+                                                        <img class="hover-img" src="{{product.images.url}}" alt="">
                                                     </a>
                                                     </div>
                                                    
-                                                    <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">Chill</span>
+                                                     <div class="product-badges product-badges-position product-badges-mrg">
+                                                        {% if product.seasonal_offer %}
+                                                    <span class="hot">{{product.seasonal_offer.name}}</span>
+                                                  
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="product-content-wrap">
@@ -119,7 +122,7 @@
                                                     </span>
                                                     </div>
                                                     <div class="product-price">
-                                                    <span>${{product.price}} </span>
+                                                    <span>${{product.get_price}} </span>
                                                     <span class="old-price">${{product.oldprice}}</span>
                                                     </div>
                                                 

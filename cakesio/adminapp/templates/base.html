@@ -51,9 +51,13 @@
                     </a>
                     <div class="submenu">
                         <a href="{% url 'admin_product' %}">Product List</a>
-                       
-                        <a href="{% url 'admin_category'%}">Categories</a>
                     </div>
+                </li>
+                 <li class="menu-item ">
+                    <a class="menu-link" href="{% url 'admin_category'%}"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                 
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
@@ -84,9 +88,8 @@
                         <span class="text">Account</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
+                        <a href="{% url 'adminlogin' %}">User login</a>
+                        
                     </div>
                 </li>
                 <li class="menu-item">
@@ -99,41 +102,21 @@
                         <span class="text"> banners</span>
                     </a>
                 </li>
-            
-            </ul>
-            <hr>
-            <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="{% url 'coupon' %}"> <i class="icon material-icons md-settings"></i>
+                    <a class="menu-link" href="{% url 'coupon' %}"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">coupon</span>
                     </a>
                     
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
+               
             </ul>
-            <br>
-            <br>
+            <hr>
         </nav>
     </aside>
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form>
+               
             </div>
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>

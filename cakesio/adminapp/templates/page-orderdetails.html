@@ -6,7 +6,7 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID: 3453012</p>
+                    <p>Details for Order ID: {{order_details.id}}</p>
                 </div>
             </div>
             <div class="card">
@@ -14,7 +14,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                             <span>
-                                <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2022, 4:34PM</b>
+                                <i class="material-icons md-calendar_today"></i> <b>{{order_details.created_date}}</b>
                             </span> <br>
                             <small class="text-muted">Order ID: {{order_details.id}}</small>
                         </div>
@@ -31,7 +31,7 @@
                             </select>
                             <button class="btn btn-primary" href=""  type="submit">Save</button>
                           
-                        </form>
+                            </form>
                         </div>
                     
                     </div>
@@ -91,6 +91,7 @@
                                         <tr>
                                             <th width="40%">Product</th>
                                             <th width="20%">Unit Price</th>
+                                            <th width="20%">Discount Price</th>
                                             <th width="20%">Quantity</th>
                                             <th width="20%" class="text-end">Total</th>
                                         </tr>
@@ -107,21 +108,26 @@
                                                 </a>
                                             </td>
                                             <td> ${{order.variant.price}}</td>
+                                            {% if order.variant.product.is_seasonal and order.variant.product.seasonal_offer %}
+                                                <td>{{ order.variant.get_price|floatformat:2 }}</td>
+                                            {% else %}
+                                                <td>{{0|floatformat:2 }}</td>
+                                            {% endif %}
                                             <td>{{order.quantity}} </td>
                                             <td class="text-end"> ${{order.sub_total}} </td>
                                         </tr>
                                         {% endfor %}
                                         <tr>
-                                            <td colspan="4">
+                                            <td colspan="5">
                                                 <article class="float-end">
                                                     <dl class="dlist">
                                                         <dt>Subtotal:</dt>
                                                         <dd>${{order_details.bill_amount}}</dd>
                                                     </dl>
-                                                    <dl class="dlist">
+                                                    {% comment %} <dl class="dlist">
                                                         <dt>Shipping cost:</dt>
                                                         <dd>$10.00</dd>
-                                                    </dl>
+                                                    </dl> {% endcomment %}
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
                                                         <dd> <b class="h5">${{order_details.bill_amount}}0</b> </dd>
@@ -129,7 +135,7 @@
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>
                                                         <dd>
-                                                            {% if order_details.payment_method == 'razorpay' %}
+                                                            {% if order_details.payment_method != "Cash_on_delivery" %}
                                                             <span class="badge rounded-pill alert-success text-success">Payment done</span>
                                                             {% else %}
                                                              <span class="badge rounded-pill alert-success text-success">pending</span>

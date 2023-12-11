@@ -3,11 +3,11 @@
 
 {% block content %}
 <section class="content-main">
-    {% for banner in banner %}
+   
             <div class="content-header">
                 <div>
                   <h2 class="content-title card-title">Banners </h2> 
-                  <a href="{% url 'admin_editbanner' banner.id %}" class="btn btn-primary m-3">Edit banner</a>
+                  <a href="{% url 'admin_editbanner' banner.id %}" class="btn btn-primary m-3">Edit or Add banner</a>
                 </div>
             </div>
         <div class="card mb-4">
@@ -16,14 +16,18 @@
                   
                 <div class="mt-4">
                     <div class="text-muted font-size-14">
-                            
-                            <img src="{{banner.banner1.url}}" alt="">
-                           
-                             <img src="{{banner.banner2.url}}" alt="">
-                            
-                             
-                              <img src="{{banner.banner3.url}}" alt="">
-                            
+                        {% if banner.banner1 %}
+                            <img src="{{ banner.banner1.url }}" alt="Banner 1">
+                        {% endif %}
+
+                        {% if banner.banner2 %}
+                            <img src="{{ banner.banner2.url }}" alt="Banner 2">
+                        {% endif %}
+
+                        {% if banner.banner3 %}
+                            <img src="{{ banner.banner3.url }}" alt="Banner 3">
+                        {% endif %}
+
                            
                        
                   
@@ -38,24 +42,26 @@
                   
                 <div class="mt-4">
                     <div class="text-muted font-size-14">
-                      
-                           
-                            <img src="{{banner.offer_banner1.url}}" alt="">
-                           
-                             <img src="{{banner.offer_banner2.url}}" alt="">
-                           
-                             
-                              <img src="{{banner.offer_banner3.url}}" alt="">
-                            
-                           
-                       
+                                            
+                        {% if banner.offer_banner1 %}
+                            <img src="{{ banner.offer_banner1.url }}" alt="Offer Banner 1">
+                        {% endif %}
+
+                        {% if banner.offer_banner2 %}
+                            <img src="{{ banner.offer_banner2.url }}" alt="Offer Banner 2">
+                        {% endif %}
+
+                        {% if banner.offer_banner3 %}
+                            <img src="{{ banner.offer_banner3.url }}" alt="Offer Banner 3">
+                        {% endif %}
+                                            
                     
                       
                     </div>
                 </div>
             </div>
         
-    {% endfor %}
+   
 </section>
          
         {% endblock %}

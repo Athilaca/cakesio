@@ -22,7 +22,7 @@ from django.core.serializers import serialize
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
     if request.user.is_authenticated:
-        return redirect('admin_index')
+        return redirect('admin_dashboard')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -109,17 +109,20 @@ def admin_category(request):
                 name=request.POST.get("name")
                 slug=request.POST.get("slug")
                 description=request.POST.get("description")
+                category_image=request.FILES.get('category_image')
                 
                 if not name or not slug:
                     raise ValidationError("Name and Slug are required fields.")
                 if Category.objects.filter(Q(slug=slug) | Q(category_name=name)).exists():
                      raise ValidationError("Category with the same name or slug already exists.")
-
+                if not category_image:
+                    raise ValidationError("Please upload an image.")
+                
             except (ValueError, ValidationError) as e:
                 error_message = str(e)  
                 return render(request,'page-categories.html',{'datas':data,'error_message': error_message,})  
         
-            myuser=Category(category_name=name,slug=slug,description=description)
+            myuser=Category(category_name=name,slug=slug,description=description,category_image=category_image)
             myuser.save()
             
         
@@ -138,10 +141,12 @@ def admin_editcategory(request,id):
             name=request.POST.get("name")
             slug=request.POST.get("slug")
             description=request.POST.get("description")
+            category_image=request.FILES.get('category_image')
         
             category_object.category_name= name
             category_object.slug=slug
             category_object.description=description
+            category_object.category_image=category_image
             category_object.save()
             
             return redirect('admin_category')
@@ -160,18 +165,19 @@ def admin_product(request):
 def admin_addproduct(request):
    
     categories=Category.objects.all()
+    seasonal_offer=SeasonalOffer.objects.all()
     if request.method=="POST":
         try:
             product_name=request.POST.get("product_name")
             description=request.POST.get("description")
             price=request.POST.get("price")
             images=request.FILES.get("images")
-            stock=request.POST.get("stock")
+            
             oldprice=request.POST.get("oldprice")
             front_image=request.FILES.get("front_image") 
             top_image=request.FILES.get("top_image")
             category=request.POST.get("category")
-
+            seasonal_offer=request.POST.get('seasonal_offer')
             if not product_name or not description:
                raise ValidationError( "Product Name and description are required fields.")
            
@@ -180,21 +186,21 @@ def admin_addproduct(request):
             
             if int(oldprice) < 0:
                 raise ValidationError("Old price must be a positive value.")
-            if not images or not front_image or not top_image:
+            if not images and not front_image and not top_image:
                 raise ValidationError("Please upload an image.")
-            if int(stock) < 0:
-                raise ValidationError("Stock must be a non-negative integer.")
-   
+           
         except (ValueError, ValidationError) as e:
             error_message = str(e)
-            return render(request, 'page-addproduct.html', {'error_message': error_message,'category':categories})
+            return render(request, 'page-addproduct.html', {'error_message': error_message,'category':categories,'seasonal_offer':seasonal_offer})
         
         category = Category.objects.get(id=category)
-        myuser=Product(product_name=product_name,description=description,price=price,images=images,stock=stock,oldprice=oldprice,front_image=front_image,top_image=top_image,category=category)
+        seasonal_offer=SeasonalOffer.objects.get(id=seasonal_offer)
+        myuser=Product(product_name=product_name,description=description,price=price,images=images,oldprice=oldprice,
+        front_image=front_image,top_image=top_image,category=category,seasonal_offer=seasonal_offer)
         myuser.save()
       
         return redirect('admin_product')
-    return render(request, 'page-addproduct.html', {'category':categories})
+    return render(request, 'page-addproduct.html', {'category':categories,'seasonal_offer':seasonal_offer})
 
 
 
@@ -234,10 +240,15 @@ def admin_editproduct(request,id):
     return render(request,'page-addproduct.html',{'datas':Product_object,'category':category})
 
 def product_delete(request,id):
-   
         product=Product.objects.get(id=id)
-      
-        product.soft_delete()
+
+        if product.is_deleted:
+       
+           product.is_deleted = False
+        else:
+           product.soft_delete()
+        product.save() 
+          
         return redirect(admin_product)
       
 def category_delete(request,id):
@@ -257,9 +268,14 @@ def admin_logout(request):
    
 @login_required(login_url='adminlogin') 
 def admin_orders(request):
-    
-    order=Order.objects.all().select_related('user').order_by('-id')
-    return render(request,'page-orders.html',{"orders":order})
+    status = request.GET.get('status', 'none')
+
+    if status == 'none':
+        orders = Order.objects.all().select_related('user').order_by('-id')
+    else:
+        orders = Order.objects.filter(status=status).select_related('user').order_by('-id')
+
+    return render(request,'page-orders.html',{"orders":orders})
 
 
 def order_details(request,order_id):
@@ -279,86 +295,82 @@ def order_details(request,order_id):
 @login_required(login_url='adminlogin')     
 def banner(request):
 
-    banner=Banner.objects.all()
+    banner=Banner.objects.first()
     return render(request,'page-banner.html',{'banner':banner})   
  
 
 def admin_editbanner(request,id):
 
-    banner_object=Banner.objects.get(id=id)
+    banner_object, created = Banner.objects.get_or_create(pk=id)
     if request.method == 'POST':
-        banner1=request.FILES.get("banner1")
-        banner2=request.FILES.get("banner2")
-        banner3=request.FILES.get("banner3")
-        offer_banner1=request.FILES.get("offer_banner1")
-        offer_banner2=request.FILES.get("offer_banner2")
-        offer_banner3=request.FILES.get("offer_banner3")
-        
-        if banner1:
-            banner_object.banner1 = banner1
-        if banner2:
-            banner_object.banner2 = banner2
-        if banner3:
-            banner_object.banner3 = banner3
-        if offer_banner1:
-            banner_object.offer_banner1 = offer_banner1
-        if offer_banner2:
-            banner_object.offer_banner2 = offer_banner2
-        if offer_banner3:
-            banner_object.offer_banner3 = offer_banner3
+        banner_object.banner1 = request.FILES.get("banner1") or banner_object.banner1
+        banner_object.banner2 = request.FILES.get("banner2") or banner_object.banner2
+        banner_object.banner3 = request.FILES.get("banner3") or banner_object.banner3
+        banner_object.offer_banner1 = request.FILES.get("offer_banner1") or banner_object.offer_banner1
+        banner_object.offer_banner2 = request.FILES.get("offer_banner2") or banner_object.offer_banner2
+        banner_object.offer_banner3 = request.FILES.get("offer_banner3") or banner_object.offer_banner3
 
         banner_object.save()
-        return redirect('banner')
-        
-    return render(request,'page-editbanner.html',{'banner':banner_object})
+        return redirect('banners')  # Replace 'banner' with the actual URL name for the banners page
+
+    return render(request, 'page-editbanner.html', {'banner': banner_object})
+
 
 
 def sales_report(request):
    
     selected_date_str = request.GET.get('selected_date')
+    end_date_str = request.GET.get('end_date')
+    
     context = {}
     
     if selected_date_str:
         
         selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
-        
-    
            
         daily_sales = Order.objects.filter(created_date__date=selected_date).order_by('-id')
         weekly_sales = Order.objects.filter(created_date__week=selected_date.isocalendar()[1]).order_by('-id')
-        monthly_sales = Order.objects.filter(created_date__month=selected_date.month)
-        yearly_sales = Order.objects.filter(created_date__year=selected_date.year).order_by('-id')
-        
-       
-           
         daily_total_sales = daily_sales.aggregate(total_sales=Sum('bill_amount'))['total_sales'] or 0
-
         weekly_total_sales = weekly_sales.aggregate(total_sales=Sum('bill_amount'))['total_sales']or 0
-        monthly_total_sales = monthly_sales.aggregate(total_sales=Sum('bill_amount'))['total_sales']
-        yearly_total_sales = yearly_sales.aggregate(total_sales=Sum('bill_amount'))['total_sales']
+      
+        if selected_date_str and end_date_str:
+       
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            
+            orders_in_date_range = Order.objects.filter(created_date__range=(selected_date, end_date)).order_by('-id')
+            total_sales_in_date_range = orders_in_date_range.aggregate(total_sales=Sum('bill_amount'))['total_sales'] or 0
 
-        context = {
-                'daily_sales': daily_sales,
-                'weekly_sales': weekly_sales,
-                'monthly_sales': monthly_sales,
-                'yearly_sales': yearly_sales,
-                'daily_total_sales': daily_total_sales,
-                'weekly_total_sales': weekly_total_sales,
-                'monthly_total_sales': monthly_total_sales,
-                'yearly_total_sales': yearly_total_sales,
-                'selected_date': selected_date,
-        }
+            context = {
+                  
+                    'selected_date': selected_date_str,
+                    'end_date': end_date_str,
+                    'orders_in_date_range': orders_in_date_range,
+                    'total_sales_in_date_range': total_sales_in_date_range
+            }
+            if 'export' in request.GET:
+                print("Export button clicked!")
+                resource = OrderResource()
+                dataset = resource.export(orders_in_date_range)
 
-        if 'export' in request.GET:
-    
-            resource = OrderResource()
-            dataset = resource.export(yearly_sales)
+                    # Create a response object.
+                response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename=sales_report.xlsx'
 
-                # Create a response object.
-            response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=sales_report.xlsx'
+                return response
+        
+        else:
 
-            return response
+            context = {
+                    
+                    'daily_sales': daily_sales,
+                    'weekly_sales': weekly_sales,
+                    'daily_total_sales': daily_total_sales,
+                    'weekly_total_sales': weekly_total_sales,
+                    'selected_date': selected_date_str,
+                    'end_date': end_date_str,
+            }
+
+       
        
             
     return render(request, 'page-salesreport.html', context)
@@ -426,5 +438,4 @@ def coupon(request):
             return HttpResponse('Invalid discount percentage or expiry date format.') 
            
     return render(request,'page-coupon.html')
-
 

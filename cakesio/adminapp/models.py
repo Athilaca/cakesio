@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+# from .views import calculate_discounted_price
 
 # Create your models here.
 class Category(models.Model):
@@ -39,6 +39,24 @@ class Product(models.Model):
     is_deleted=models.BooleanField(default=False)
     is_seasonal = models.BooleanField(default=False)
     seasonal_offer = models.ForeignKey(SeasonalOffer, on_delete=models.SET_NULL, null=True, blank=True, related_name='discounted_products')
+
+    
+ 
+    def get_price(self):
+        if self.is_seasonal and self.seasonal_offer:
+            # Calculate and return the seasonal price and discount amount
+            original_price = self.price
+            discount_percentage = self.seasonal_offer.discount_percentage
+
+            # Calculate discounted price
+            discount_amount = (original_price * discount_percentage) / 100
+            seasonal_price = original_price - discount_amount
+
+            return seasonal_price
+        else:
+            # Return the regular price
+            return self.price
+
 
     def soft_delete(self):
         self.is_deleted = True

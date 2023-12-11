@@ -40,7 +40,7 @@
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
+                                            <label class="form-label">Regular price (1 kg)</label>
                                             <div class="row gx-2">
                                                 <input placeholder="$" type="text" class="form-control" name="price" value="{{datas.price}}">
                                             </div>
@@ -83,7 +83,7 @@
                                 <img src="{{datas.images.url}}" alt="">
                                
                                 <input class="form-control" type="file" name="images" value="{{datas.images}}" >
-                                {% if not datas.is_seasonal %}
+                               
                                 <div class="input-upload">
                                     <label>front-image</label>
                                     <img src="{{datas.front_image.url}}" alt="">
@@ -94,8 +94,18 @@
                                     <img src="{{datas.top_image.url}}" alt="">
                                     <input class="form-control" type="file" name="top_image"  value="{{datas.top_image}}">
                                 </div>
-                                {% endif %}
+                                
                             </div>
+
+                    
+                                    <label class="form-label pt-5">Seasonaloffer</label>
+                                   <select class="form-select" name="seasonal_offer">
+                                        {% for i in seasonal_offer %}
+                                        <option value="{{ i.id}}"  {% if i.id == datas.seasonal_offer.id %}selected{% endif %}> {{i.name}} </option>
+                                        {% endfor %}
+                                       
+                                    </select>
+                              
                         </div>
                     </div> 
                
