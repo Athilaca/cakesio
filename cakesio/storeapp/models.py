@@ -25,7 +25,7 @@ class  Variation(models.Model):
         return str( self.product)
     
     def get_price(self):
-        if self.product.is_seasonal and self.product.seasonal_offer:
+        if self.product.is_seasonal and self.product.seasonal_offer and self.product.seasonal_offer.is_active():
             # Calculate and return the seasonal price and discount amount
             original_price = self.price
             discount_percentage = self.product.seasonal_offer.discount_percentage

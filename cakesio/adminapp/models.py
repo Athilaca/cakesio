@@ -43,7 +43,7 @@ class Product(models.Model):
     
  
     def get_price(self):
-        if self.is_seasonal and self.seasonal_offer:
+        if self.is_seasonal and self.seasonal_offer and self.seasonal_offer.is_active():
             # Calculate and return the seasonal price and discount amount
             original_price = self.price
             discount_percentage = self.seasonal_offer.discount_percentage

@@ -106,7 +106,9 @@
                                                    
                                                      <div class="product-badges product-badges-position product-badges-mrg">
                                                         {% if product.seasonal_offer %}
-                                                    <span class="hot">{{product.seasonal_offer.name}}</span>
+                                                     {% if product.seasonal_offer.is_active %}
+                                                        <span class="hot">{{ product.seasonal_offer}}</span>
+                                                    {% endif %}
                                                   
                                                     {% endif %}
                                                     </div>
