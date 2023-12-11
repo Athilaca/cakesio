@@ -139,13 +139,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'cakeapp.CustomUser'
 
+
+STATIC_URL='/static/'
 STATICFILES_DIRS=[
-    "adminapp/static",
-    "cakeapp/static",
-    "storeapp/static",
-   
+os.path.join(BASE_DIR,'static')
+
 ]
-STATIC_ROOT = BASE_DIR / 'static/'
 
 
 MESSAGE_TAGS={
