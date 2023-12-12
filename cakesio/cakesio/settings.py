@@ -142,7 +142,7 @@ AUTH_USER_MODEL = 'cakeapp.CustomUser'
 
 STATIC_URL='static/'
 STATICFILES_DIRS=[
-os.path.join(BASE_DIR,'static')
+os.path.join(BASE_DIR,'cakesio/static')
 
 ]
 STATIC_ROOT=os.path.join(BASE_DIR,'assets/')
