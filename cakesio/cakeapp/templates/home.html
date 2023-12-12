@@ -14,48 +14,54 @@
                     </div>
                        
     <main class="main">
-        {% for banner in banners %}
-       
+      
         <section class="banners mb-20">
             <div class="container">
                 <div class="row">
+                     {% for banner in banners %}
+      
                     <div class="col-lg-4 col-md-6">
                         <div class="banner-img wow fadeIn animated">
+                             {% if banner.offer_banner1 %}
                             <img src="{{ banner.offer_banner1.url}}" alt="">
                             <div class="banner-text">
                               
                                 <h4>Save 20% on <br>your birthdays</h4>
                                
                             </div>
-                            
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="banner-img wow fadeIn animated">
+                             {% if banner.offer_banner2 %}
                             <img src="{{banner.offer_banner2.url}}" alt="">
                             <div class="banner-text">
                                <h4>Great Seasonal<br>Cakes</h4>
                                <h5> At 30% <br>Offer</h5>
                             </div>
-                            {% comment %} <a href="{% url 'offer' %}">Click here to Shop Now <i class="fi-rs-arrow-right"></i></a> {% endcomment %}
+                             {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-4 d-md-none d-lg-flex">
                         <div class="banner-img wow fadeIn animated  mb-sm-0">
+                             {% if banner.offer_banner3%}
                             <img src="{{banner.offer_banner3.url}}" alt="">
                             <div class="banner-text">
-                               
+                              {% endif %}  
                                 <h4>Shop Today’s <br>Deals & Offers</h4>
                                 
                             </div>
                         
                         </div>
                     </div>
+                    
+            {% endfor %}
                 </div>
             </div>
-            {% endfor %}
+              
         </section>
-        
+       
         <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
             <div class="container">
                 <div class="row">
