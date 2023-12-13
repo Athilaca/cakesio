@@ -69,7 +69,7 @@
                 {% for category in category %}
               <div class="card-1">
                 <figure class="img-hover-scale overflow-hidden">
-                  <a href="shop-grid-right.html"
+                  <a href="{% url 'home' %}"
                     ><img
                       src="{{category.category_image.url}}"
                       alt=""

@@ -262,13 +262,10 @@ def profile(request):
 def change_password(request):
     if request.method == 'POST':
         fname=request.POST['fname']
-        email=request.POST['email']
         current_password = request.POST['password']
         new_password = request.POST['npassword']
         
         user = request.user
-
-        user.email = email
         user.first_name = fname
         
         if current_password and new_password:
@@ -344,3 +341,5 @@ def update_profile_pic(request):
    context={'form':form}
    return render(request,'profile.html',context)
 
+def about(request):
+    return render(request,'about.html')
