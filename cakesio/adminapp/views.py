@@ -195,7 +195,15 @@ def admin_addproduct(request):
             return render(request, 'page-addproduct.html', {'error_message': error_message,'category':categories,'seasonal_offer':seasonal_offer})
         
         category = Category.objects.get(id=category)
-        seasonal_offer=SeasonalOffer.objects.get(id=seasonal_offer)
+        if seasonal_offer:
+            try:
+              seasonal_offer = SeasonalOffer.objects.get(id=int(seasonal_offer))
+            except SeasonalOffer.DoesNotExist:
+        # Handle the case when the specified seasonal_offer ID does not exist
+              seasonal_offer = None
+        else:
+            seasonal_offer = None
+            
         myuser=Product(product_name=product_name,description=description,price=price,images=images,oldprice=oldprice,
         front_image=front_image,top_image=top_image,category=category,seasonal_offer=seasonal_offer)
         myuser.save()
