@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+
+    
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Product Variation</h2>
+                 
+                </div>
+                
+            </div>
+            <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Variation</h4>
+                        </div>
+                          {% if error_message %}
+                                <div class="alert alert-danger">
+                                    {{ error_message }}
+                                </div>
+                                {% endif %}
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">product</label>
+                                            <select class="form-select" name="product_name">
+                                         {% for product in products %}
+                                        <option value="{{ product.id }}" {% if product.id == variation.product.id %}selected{% endif %}> {{product.product_name}} </option>
+                                        {% endfor %}
+                                       
+                                    </select>
+                                        </div>
+                                    </div>
+                                   
+                                       
+                                        <div class="mb-4">
+                                    <label for="product_name" class="form-label">Weight</label>
+                                    <input type="text" placeholder="gam" class="form-control" name="weight" value="{{ variation.weight }}">
+                                </div>
+                                    
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="product_name" class="form-label">price</label>
+                                    <input type="text" placeholder="" class="form-control" name="price" value="{{ variation.price }}">
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Stock</label>
+                                   <input type="text" placeholder="" class="form-control" name="stock" value="{{ variation.stock }}">
+                                </div>
+                                 <button type="submit" class="btn btn-md rounded font-sm hover-up">save changes</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                
+                </div>
+               
+           
+        </section> <!-- content-main end// -->
+
+         {% endblock%}

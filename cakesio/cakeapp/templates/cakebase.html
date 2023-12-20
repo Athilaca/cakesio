@@ -20,7 +20,7 @@
     />
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'cakeapp/css/main.css'%}" />
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body>
@@ -70,7 +70,7 @@
                   {% if user.is_authenticated %}
                   <li>
                     <i class="fi-rs-user"></i
-                    ><a href="{% url 'logout' %}">Logout</a>
+                    ><a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
                   </li>
                   {% else %}
                   <li>

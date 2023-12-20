@@ -29,20 +29,22 @@ def add_cart(request,product_id):
                  weight = 1
                 
             varient=Variation.objects.get(product=product,weight=weight)
+            
+            if varient.stock > 0: 
+                price = varient.get_price()
+                        
+                cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient,discounted_price=price)
+                        
+                if not created:
+                    if varient.stock >= cart_item.quantity + 1:
+                            cart_item.quantity += 1
+                            cart_item.save()
 
-            price = varient.get_price()
                     
-            cart_item,created=CartItem.objects.get_or_create(user_id=request.user.id,variations=varient,discounted_price=price)
+            else:
+                messages.error(request, "Sorry, this item is out of stock.")            
                     
-            if not created:
-                if varient.stock >= cart_item.quantity + 1:
-                        cart_item.quantity += 1
-                        cart_item.save()
-
-                else:
-                    messages.error(request, "Sorry, there is not enough stock available.")
-                    
-                return redirect('cart')  
+            return redirect('cart')  
     return redirect('cart')
      
 
@@ -103,7 +105,11 @@ def delete_cart(request,cart_id):
 
 def order(request):
     
-    addresses=ShippingAddress.objects.filter(user=request.user)
+    addresses=ShippingAddress.objects.filter(user=request.user).order_by('-id')
+    if addresses.exists():
+        last_added_address = addresses.first()
+    else:
+        last_added_address = None
     cartitems = CartItem.objects.filter(user_id=request.user,status=False)
     total = 0
     selected_address = None
@@ -152,9 +158,9 @@ def order(request):
                return redirect('order')
        
         
-        if 'selected_address' not in request.POST:
-            messages.error(request, "Please select an address.")
-            return redirect('order')
+        # if 'selected_address' not in request.POST:
+        #     messages.error(request, "Please select an address.")
+        #     return redirect('order')
         
         address_id=request.POST["selected_address"]
         selected_address=ShippingAddress.objects.get(id=address_id)
@@ -227,7 +233,7 @@ def order(request):
             
             return redirect('success')
     
-    return render(request,'shop-checkout.html',{'address':addresses,'cartitems':cartitems, 'total':total,'selected_address':selected_address})
+    return render(request,'shop-checkout.html',{'address':addresses,'cartitems':cartitems, 'total':total,'selected_address':selected_address,'last_added_address': last_added_address})
 
 def new_address(request):
     cartitems = CartItem.objects.filter(user_id=request.user, status=False)

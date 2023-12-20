@@ -16,7 +16,9 @@ from django.shortcuts import get_object_or_404
 from . forms import ImageForm
 from django.db.models import Q
 from .models import *
-
+from django.template.loader import get_template
+from  xhtml2pdf import pisa
+from django.http import HttpResponse
 
 
 
@@ -160,7 +162,6 @@ def signup(request):
 
             referral_code=request.session.get('referral_code')
             if referral_code and new_user:
-                print(referral_code)
                 try:
                     
                     referrer = CustomUser.objects.get(referral_code=referral_code)
@@ -179,7 +180,7 @@ def signup(request):
                 except CustomUser.DoesNotExist:
                     pass 
 
-            return redirect('index') 
+            return redirect('login') 
     return render(request,'signup.html')
 
 
@@ -216,7 +217,7 @@ def account(request):
     order=Order.objects.filter(user=request.user).order_by('-id')
     wallet, created = Wallet.objects.get_or_create(user=request.user, defaults={'balance': 0.00})
     referral_code = request.user.referral_code if request.user.referral_code else "N/A"
-    referral_link = request.build_absolute_uri(f'/signup?ref={referral_code}')
+   
 
 
     if request.method=="POST":
@@ -253,7 +254,7 @@ def account(request):
            myuser=ShippingAddress(full_name=full_name,address=address,city=city,district=district,pincode=pincode,phone_number=phone_number)
            myuser.save()     
            return redirect(account)
-    return render (request,"account.html",{'address':addresses,'orders':order,'wallet':wallet,'referral_link': referral_link,'referral_code':referral_code})
+    return render (request,"account.html",{'address':addresses,'orders':order,'wallet':wallet,'referral_code':referral_code})
 
 
 def profile(request):
@@ -310,9 +311,29 @@ def order_view(request,order_id):
     order_details=Order.objects.get(id=order_id)
     order_items=Order.objects.get(id=order_id).new_order.all().select_related('variant')
     
-    context={'order_items':order_items,'order_details':order_details}
+    context={'order_items':order_items,'order_details':order_details}   
+    if 'pdf' in request.GET:
+        return order_to_pdf(order_id)
+    else:
+        return render (request,'order-view.html',context)
 
-    return render (request,'order-view.html',context)
+def order_to_pdf(order_id):
+    order_details = Order.objects.get(id=order_id)
+    order_items = Order.objects.get(id=order_id).new_order.all().select_related('variant')
+
+    context = {'order_items': order_items, 'order_details': order_details}
+    template_path = 'order-view.html'
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename=order_{order_id}.pdf'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+
+    return response
 
 
 def order_cancel(request,order_id):
@@ -342,4 +363,57 @@ def update_profile_pic(request):
    return render(request,'profile.html',context)
 
 def about(request):
-    return render(request,'about.html')
+    return render(request,'about.html') 
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '')
+        
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Email is not registered. Please check your email or register.')
+            return redirect('forgot_password')
+ 
+        # Generate a unique token for this reset link
+        token = get_random_string(length=5)
+        user.reset_token = token
+        user.save()
+
+        # Send reset link to the user's email
+        reset_link = f'https://cakesio.shop/reset_password/{token}/'
+        send_mail('Password Reset for cakesio', f'Hello,\n\nYou have requested to reset your password for cakesio. To complete the process, please click on the following link: {reset_link}\n\nIf you did not make the request, please ignore this message.\n\nThank you', 'athilaca26@gmail.com', [email])
+
+        messages.success(request, f'A password reset link has been sent to {email}.')
+        return redirect('forgot_password')
+
+    return render(request, 'forgot-password.html')
+
+
+
+def reset_password(request, token):
+
+    try:
+        user = CustomUser.objects.get(reset_token=token)
+    except CustomUser.DoesNotExist:
+        messages.error(request, 'Invalid or expired reset link.')
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+
+        if new_password != confirm_password:
+            messages.warning(request, 'Passwords do not match.')
+        else:
+            # Set the new password
+            user.set_password(new_password)
+            user.reset_token = None  # Reset the token after changing the password
+            user.save()
+
+            messages.success(request, 'Password has been successfully changed. You can now log in.')
+            return redirect('login')
+
+    return render(request, 'reset-password.html',{'token': token})

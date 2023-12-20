@@ -21,7 +21,7 @@ from django.core.serializers import serialize
 # Create your views here.
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
-    if request.user.is_authenticated:
+    if request.user.is_superuser:
         return redirect('admin_dashboard')
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -39,7 +39,9 @@ def admin_login(request):
 @login_required(login_url='adminlogin')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_dashboard(request):
-    
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
         total_orders = Order.objects.count()
         total_amount = Order.objects.aggregate(total_amount=Sum('bill_amount'))['total_amount'] or 0
         total_products = Product.objects.count()
@@ -74,8 +76,10 @@ def admin_dashboard(request):
 
 @login_required(login_url='adminlogin')
 def admin_user(request):
-   
-    data=CustomUser.objects.all()
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        data=CustomUser.objects.all()
   
     return render(request,'page-user.html',{'data':data})
        
@@ -101,6 +105,9 @@ def unblock_user(request, user_id):
 
 @login_required(login_url='adminlogin') 
 def admin_category(request):
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
         data=Category.objects.all()
     
         if request.method=='POST':
@@ -133,7 +140,9 @@ def admin_category(request):
 
 
 def admin_editcategory(request,id):
-    if request.user.is_authenticated:
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
 
         category_object=Category.objects.get(id=id)
 
@@ -142,11 +151,14 @@ def admin_editcategory(request,id):
             slug=request.POST.get("slug")
             description=request.POST.get("description")
             category_image=request.FILES.get('category_image')
-        
+
+            if category_image:
+                category_object.category_image=category_image
+
             category_object.category_name= name
             category_object.slug=slug
             category_object.description=description
-            category_object.category_image=category_image
+            
             category_object.save()
             
             return redirect('admin_category')
@@ -156,16 +168,20 @@ def admin_editcategory(request,id):
 
 @login_required(login_url='adminlogin')
 def admin_product(request):
-    
-    data=Product.objects.all()
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        data=Product.objects.all()
 
     return render(request,'page-products.html',{"datas":data})
 
 @login_required(login_url='adminlogin')    
 def admin_addproduct(request):
-   
-    categories=Category.objects.all()
-    seasonal_offer=SeasonalOffer.objects.all()
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        categories=Category.objects.all()
+        seasonal_offer=SeasonalOffer.objects.all()
     if request.method=="POST":
         try:
             product_name=request.POST.get("product_name")
@@ -214,9 +230,12 @@ def admin_addproduct(request):
 
 
 def admin_editproduct(request,id):
-    category=Category.objects.all()
-    Product_object=Product.objects.get(id=id)
-    seasonal_offer = SeasonalOffer.objects.all()
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        category=Category.objects.all()
+        Product_object=Product.objects.get(id=id)
+        seasonal_offer = SeasonalOffer.objects.all()
 
     if request.method == 'POST':
         product_name=request.POST.get("product_name")
@@ -279,15 +298,19 @@ def category_delete(request,id):
 
 @login_required(login_url='adminlogin') 
 def admin_logout(request):
-    
-    logout(request)
-       
-    return redirect(admin_login)
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+       logout(request)
+       return redirect(admin_login)
 
    
 @login_required(login_url='adminlogin') 
 def admin_orders(request):
-    status = request.GET.get('status', 'none')
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        status = request.GET.get('status', 'none')
 
     if status == 'none':
         orders = Order.objects.all().select_related('user').order_by('-id')
@@ -313,8 +336,11 @@ def order_details(request,order_id):
 
 @login_required(login_url='adminlogin')     
 def banner(request):
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
 
-    banner=Banner.objects.first()
+        banner=Banner.objects.first()
     return render(request,'page-banner.html',{'banner':banner})   
  
 
@@ -396,9 +422,11 @@ def sales_report(request):
 
 @login_required(login_url='adminlogin') 
 def product_variation(request):
-    
-    variations=Variation.objects.all()
-    product=Product.objects.all()
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
+    else:
+        variations=Variation.objects.all()
+        product=Product.objects.all()
   
     if request.method=="POST":
         try:
@@ -434,6 +462,8 @@ def product_variation(request):
    
 @login_required(login_url='adminlogin') 
 def coupon(request):
+    if  not request.user.is_superuser:
+        return redirect('adminlogin')
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
         discount_percentage = request.POST.get('discount_percentage')
@@ -448,13 +478,15 @@ def coupon(request):
 
            
             coupon = Coupon.objects.create(
-                user=request.user,
                 code=coupon_code,
                 discount_percentage=discount_percentage,
                 expiry_date=expiry_date
             )
+            coupon.users.add(request.user)
+            messages.success(request,'coupon created sucessfully')
+            return redirect('coupon')
         except ValueError:
-            return HttpResponse('Invalid discount percentage or expiry date format.') 
+            messages.error('Invalid discount percentage or expiry date format.') 
            
     return render(request,'page-coupon.html')
 
@@ -464,3 +496,40 @@ def variation_delete(request,id):
       
         dele.delete()
         return redirect(product_variation)
+
+def admin_editvariation(request,id):
+    variation_object=Variation.objects.get(id=id)
+    if request.method == 'POST':
+        try:
+            product_id = request.POST.get("product_name")
+            weight = request.POST.get("weight")
+            price = request.POST.get("price")
+            stock = request.POST.get("stock")
+       
+            if not product_id:
+                raise ValidationError("Product Name is required.")
+            
+           
+            if int(price) < 0:
+                raise ValidationError("Price must be a positive value.")
+
+            if int(stock) < 0:
+                raise ValidationError("Stock must be a non-negative integer.")
+
+        except (ValueError, ValidationError) as e:
+            error_message = str(e)
+            return render(request, 'page-editvariation.html', {'error_message': error_message, 'variation': variation_object})
+
+        product = Product.objects.get(id=product_id)
+        variation_object.product = product
+        variation_object.price = price
+        variation_object.stock = stock
+        variation_object.weight = weight
+        variation_object.save()
+
+        return redirect('product_variation')
+
+    products = Product.objects.all()
+    return render(request, 'page-editvariation.html', {'products': products, 'variation': variation_object})
+
+  

@@ -22,6 +22,6 @@ urlpatterns = [
     path('sales_report',views.sales_report,name="sales_report"),
     path('product_variation',views.product_variation,name="product_variation"),
     path('coupon',views.coupon,name="coupon"),
-    path('variation_delete/<int:id>',views.variation_delete,name="variation_delete")
-
+    path('variation_delete/<int:id>',views.variation_delete,name="variation_delete"),
+    path('admin_editvariation/<int:id>/',views.admin_editvariation,name="admin_editvariation"),
 ]

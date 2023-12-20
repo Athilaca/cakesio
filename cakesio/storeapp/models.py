@@ -50,11 +50,7 @@ class CartItem(models.Model):
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
   
     def save(self, *args, **kwargs):
-        # Calculate the subtotal
-        # if self.variations.product:
-        #     self.subtotal = self.quantity * self.variations.price
-        # else:
-        #     self.subtotal = 0.00
+        
         if self.discounted_price:
             self.subtotal=self.quantity* self.discounted_price
         elif self.variations.product:

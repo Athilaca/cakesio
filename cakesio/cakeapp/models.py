@@ -35,6 +35,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pics/', default='default.jpg')
     referral_code = models.CharField(max_length=10, unique=True, blank=True, null=True)
+    reset_token = models.CharField(max_length=32, blank=True, null=True)
 
 
     is_active = models.BooleanField(default=True)

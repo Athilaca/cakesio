@@ -15,7 +15,12 @@
         <div class="card mb-4">
            
             <div class="card-body">
-              
+              {% for x in messages %}
+                                        <div class="alert alert-{{x.tags}} alert-dismissible fade show"role="alert">
+                                          {{x}}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close">
+                                        </div>
+                                        {% endfor %}
                 <div class="mt-4">
                     <div class="text-muted font-size-14">
                         <label>CREATE COUPON</label>
@@ -26,6 +31,7 @@
                         <div>
                            <input class="form-control mt-3" type="text" placeholder="enter discount"  name="discount_percentage">
                            </div>
+                            
                             <div>
                            <input class="form-control mt-3" type="date" placeholder="enter expiry date"  name="expiry_date">
                            </div>

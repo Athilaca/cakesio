@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -86,7 +86,7 @@
                         <span class="text">Account</span>
                     </a>
                     <div class="submenu">
-                        <a href="{% url 'adminlogin' %}">User login</a>
+                        <a href="{% url 'adminlogin' %}">admin login</a>
                         
                     </div>
                 </li>
@@ -101,7 +101,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="{% url 'coupon' %}"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="{% url 'coupon' %}"> <i class="icon material-icons md-local_library"></i>
                         <span class="text">coupon</span>
                     </a>
                     
@@ -119,12 +119,7 @@
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
                 <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
                     </li>
@@ -143,20 +138,6 @@
         {% block content%}
         {% endblock%}
         
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer>
     </main>
     <script src="{% static 'adminapp/js/vendors/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'adminapp/js/vendors/bootstrap.bundle.min.js'%}"></script>

@@ -41,11 +41,11 @@
                                 
                                 <div class="mb-3">
                                     <label for="product_name" class="form-label">price</label>
-                                    <input type="text" placeholder="$" class="form-control" name="price">
+                                    <input type="text" placeholder="" class="form-control" name="price">
                                 </div>
                                 <div class="col-sm-6 mb-3">
                                     <label class="form-label">Stock</label>
-                                   <input type="text" placeholder="$" class="form-control" name="stock">
+                                   <input type="text" placeholder="" class="form-control" name="stock">
                                 </div>
                                  <button type="submit" class="btn btn-md rounded font-sm hover-up">submit</button>
                             </form>
@@ -59,9 +59,16 @@
                             <div class="col col-check flex-grow-0">
                              
                                 <div class="form-check">
-                                  <a href="{% url 'variation_delete' variation.id  %}" class="btn btn-sm font-sm btn-danger rounded">
+                                 <a href="" class="btn btn-sm font-sm btn-danger rounded" onclick="confirmDelete(event,'{% url 'variation_delete' variation.id %}')">
+                       
                                     <i class="material-icons md-delete_forever "></i>
+                                    
                                 </a>  
+                                <a href="{% url 'admin_editvariation' variation.id %}" class="btn btn-sm font-sm rounded btn-brand mt-10">
+                                    <i class="material-icons md-edit"></i>
+                                </a>
+                       
+                                
                                 </div>
                             </div>
                             <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
@@ -81,17 +88,34 @@
                               
                             </div>
                             <div class="col-lg-2 col-sm-2 col-4 col-price">
-                                <span >${{variation.price}}</span>
+                                <span >₹{{variation.price}}</span>
                                 
                             </div>
                            
                         
-                           
                         </div> <!-- row .// -->
                     </article> <!-- itemlist  .// -->
-                  
+                   {% endfor %}
                 </div>
-                {% endfor %}
+               
            
         </section> <!-- content-main end// -->
+<script>
+    function confirmDelete(event,deleteUrl) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = deleteUrl; // Redirect to the delete URL if confirmed
+            }
+        });
+    }
+</script>
          {% endblock%}

@@ -18,5 +18,8 @@ urlpatterns = [
     path("update_profile_pic",views.update_profile_pic,name="update_profile_pic"),
     path('products/category/<slug:category_slug>/',views. home, name='home'),
     path('home/<str:price_range>/',views.home, name='home_price_range'),
-    path('about',views.about,name="about")
+    path('about',views.about,name="about"),
+    path("forgot_password",views.forgot_password,name="forgot_password"),
+    path("reset_password/<str:token>/",views.reset_password, name='reset_password'),
+
 ]

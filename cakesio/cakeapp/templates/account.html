@@ -7,7 +7,6 @@
          <div class=" breadcrumb-wrap">
            <div class="container">
                 <div class="breadcrumb">
-    
                     <div class="logo logo-width-1 mt-5">
                         <a href="{% url 'account' %}"><img src="{{ request.user.profile_pic.url}}" class="img-xs rounded-circle" alt="profile photo"></a>
                      
@@ -25,11 +24,10 @@
                     </div>
                     <div class="card-body">
                        
-                        <h5>Your Referral Link</h5>
+                        <h5>Your Referral Code</h5>
 
-                        <p>Share this link with your friends to earn rewards:</p>
-                        <a href="{{referral_link}}">{{referral_link}}</a>
-                        <p>or use the referral code: {{referral_code}}</p>
+                        <p>Share this code with your friends to earn rewards:</p>
+                        <p>use the referral code: {{referral_code}}</p>
                     </div>
                     
                 </div>
@@ -175,17 +173,16 @@
                                                                 <td>{{order.id}}</td>
                                                                 <td>{{order.created_date}}</td>
                                                                 <td>{{order.status}}</td>
-                                                                <td>${{order.bill_amount}}</td>
-                                                                <td><a href="{% url 'order_view' order.id %}" class="btn-small d-block">View </a>
+                                                                <td>₹{{order.bill_amount}}</td>
+                                                                <td><a href="{% url 'order_view' order.id %}" class="btn-small d-block">View  order </a>
                                                                 </td>
                                                               
                                                                 <td>
                                                                 {% if order.status == "Pending" or order.status == "confirmed" %}
-                                                                <a href="{% url 'order_cancel' order.id %}"  type="button" class="btn-small d-block btn-danger text-center">Cancel </a>
+                                                                <a href="#" onclick="confirmCancelOrder({{ order.id }});" class="btn-small d-block btn-danger text-center">Cancel</a>
                                                                 {% endif %}
                                                                 </td>
                                                                
-                                                            </tr>
                                                             {% endfor %}
                                                         </tbody>
                                                     </table>
@@ -201,12 +198,12 @@
                                             <div class="card-body contact-from-area">
                                                 <p>For order cancellations before shipping,it promptly refunds the amount to the user's wallet when payment using UPI.
 
-"Additionally, successful referrals are rewarded".</p>
+                                                 "Additionally, successful referrals are rewarded".</p>
                                                 <div class="row">
                                                     <div class="col-lg-8 m-5">
                                                        
                                                          <h3>Wallet Amount</h3>
-                                                            <h4 class="mt-4">Balance: ${{ wallet.balance }}</h4>
+                                                            <h4 class="mt-4">Balance:₹{{ wallet.balance }}</h4>
 
                                                     </div>
                                                 </div>
@@ -294,6 +291,25 @@
         
         window.location.href = "{% url 'update_profile_pic' %}";
     }
+</script>
+
+<script>
+function confirmCancelOrder(orderId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect to the URL for cancelling the order
+            window.location.href = "{% url 'order_cancel' 999 %}".replace('999', orderId);
+        }
+    });
+}
 </script>
 {% endblock %}
    

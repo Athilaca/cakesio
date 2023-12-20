@@ -106,7 +106,7 @@
                                     <tr>
                                         <td class="text-center">
                                             <div class="form-check">
-                                                <input class="form-check-input" name="selected_address" type="radio" value="{{i.id}}" />
+                                                <input class="form-check-input" name="selected_address" type="radio" value="{{i.id}}" {% if i == last_added_address %}checked{% endif %} />
                                             </div>
                                         </td>
                                         <td>{{i.full_name}}</td>
@@ -153,14 +153,14 @@
                                             <td>
                                                 <h5><a href="shop-product-full.html">{{cartitem.variations.product.product_name}}</a></h5> <span class="product-qty">x {{cartitem.quantity}}</span>
                                             </td>
-                                            <td>${{cartitem.subtotal}}</td>
+                                            <td>₹{{cartitem.subtotal}}</td>
                                            
                                         </tr>
                                         {% endfor%}
                                       
                                         <tr>
                                             <th>SubTotal</th>
-                                            <td class="product-subtotal" colspan="2">${{total}}</td>
+                                            <td class="product-subtotal" colspan="2">₹{{total}}</td>
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
@@ -172,7 +172,7 @@
                                         </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900">${{total}}</span></td>
+                                            <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900">₹{{total}}</span></td>
                                         </tr>
                                        
                                     </tbody>
