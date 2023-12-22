@@ -25,8 +25,11 @@ def add_cart(request,product_id):
             product = Product.objects.get(id=product_id)
             weight=request.POST.get('weightlist')
                 
-            if weight == "":
-                 weight = 1
+            try:
+                weight = float(weight)
+            except ValueError:
+                messages.error(request, 'Please select a valid weight/piece') 
+                return redirect('product_detail',product_id=product_id)
                 
             varient=Variation.objects.get(product=product,weight=weight)
             
